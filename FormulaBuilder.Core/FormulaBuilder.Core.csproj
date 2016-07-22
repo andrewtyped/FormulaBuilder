@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="DependencyResolution\LoggingRegistry.cs" />
     <Compile Include="DependencyResolution\NHibernateRegistry.cs" />
+    <Compile Include="Domain\FormulaBuilder.cs" />
     <Compile Include="Logging\ILoggingService.cs" />
     <Compile Include="Logging\LoggingService.cs" />
     <Compile Include="Models\Formula.cs" />
@@ -94,9 +95,7 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Domain\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,4 +1,5 @@
 ﻿using FormulaBuilder.Tests.DependencyResolution;
+using NHibernate;
 using NUnit.Framework;
 using StructureMap;
 using System;
@@ -15,15 +16,29 @@ namespace FormulaBuilder.Tests
     {
         private IContainer _container;
         protected IContainer _nestedContainer;
-
+        protected ISession _session;
         public BaseUnitTest()
         {
             _container = IoC.InitializeForUnitTests();
             _nestedContainer = _container.GetNestedContainer();
         }
 
-        [OneTimeTearDown]
+        [SetUp]
+        public void SetUp()
+        {
+            _nestedContainer = _container.GetNestedContainer();
+            _session = _nestedContainer.GetInstance<ISession>();
+        }
+
+        [TearDown]
         public void TearDown()
+        {
+            if (_nestedContainer != null)
+                _nestedContainer.Dispose();
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
             if (_nestedContainer != null)
                 _nestedContainer.Dispose();

@@ -17,15 +17,22 @@ namespace FormulaBuilder.Tests
         [Test]
         public void Can_Persist_TestData()
         {
-            using (var session = _nestedContainer.GetInstance<ISession>())
-            {
-                TestData.InsertTestData(session);
+                TestData.InsertTestData(_session);
 
-                session.Flush();
+                var formulas = _session.Query<Formula>().ToList();
+                var link = _session.Query<FormulaLink>().ToList();
+        }
 
-                var formulas = session.Query<Formula>().ToList();
-                var link = session.Query<FormulaLink>().ToList();
-            }
+        [Test]
+        public void Can_Get_Topmost_Node_Of_Formula()
+        {
+                TestData.InsertTestData(_session);
+
+                var tripleSumFormula = _session.Query<Formula>().Single(f => f.Name == "Triple Sum");
+                var builder = new Core.Domain.FormulaBuilder();
+                var topmostNode = builder.GetTopMostNode(tripleSumFormula);
+
+                Assert.That(topmostNode.Node.Value == "+");
         }
     }
 }
