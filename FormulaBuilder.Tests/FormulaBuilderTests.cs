@@ -24,7 +24,7 @@ namespace FormulaBuilder.Tests
                 session.Flush();
 
                 var formulas = session.Query<Formula>().ToList();
-                var expressions = session.Query<FormulaExpression>().ToList();
+                var link = session.Query<FormulaLink>().ToList();
             }
         }
     }

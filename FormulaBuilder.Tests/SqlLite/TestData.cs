@@ -12,11 +12,13 @@ namespace FormulaBuilder.Tests.SqlLite
     {
         private const string OPERATOR = "operator";
         private const string TOKEN = "token";
+        private const string LEFT = "left";
+        private const string RIGHT = "right";
         public static void InsertTestData(ISession session)
         {
             using (var tx = session.BeginTransaction())
             {
-                foreach (var node in CreateFormulaNodes())
+                foreach (var node in CreateNodes())
                 {
                     session.Save(node);
                 }
@@ -29,9 +31,9 @@ namespace FormulaBuilder.Tests.SqlLite
             session.Clear();
         }
 
-        private static List<FormulaNode> CreateFormulaNodes()
+        private static List<Node> CreateNodes()
         {
-            return new List<FormulaNode>()
+            return new List<Node>()
             {
                 Plus(),
                 Param1(),
@@ -40,72 +42,59 @@ namespace FormulaBuilder.Tests.SqlLite
             };
         }
 
-        private static FormulaNode _plus;
-        private static FormulaNode Plus()
+        private static Node _plus;
+        private static Node Plus()
         {
-            return _plus ?? (_plus = new FormulaNode(OPERATOR, "+"));
+            return _plus ?? (_plus = new Node(OPERATOR, "+"));
         }
 
-        private static FormulaNode _param1;
-        private static FormulaNode Param1()
+        private static Node _param1;
+        private static Node Param1()
         {
-            return  _param1 ?? (_param1 = new FormulaNode(TOKEN, "Param1"));
+            return  _param1 ?? (_param1 = new Node(TOKEN, "Param1"));
         }
 
-        private static FormulaNode _param2;
-        private static FormulaNode Param2()
+        private static Node _param2;
+        private static Node Param2()
         {
-            return _param2 ?? (_param2 = new FormulaNode(TOKEN, "Param2"));
+            return _param2 ?? (_param2 = new Node(TOKEN, "Param2"));
         }
 
-        private static FormulaNode _param3;
-        private static FormulaNode Param3()
+        private static Node _param3;
+        private static Node Param3()
         {
-            return _param3 ?? (_param3 = new FormulaNode(TOKEN, "Param3"));
+            return _param3 ?? (_param3 = new Node(TOKEN, "Param3"));
         }
 
         /// <summary>
-        /// encapsulates the expression (+ (+ a b) c)
+        /// encapsulates the Link (+ (+ a b) c)
         /// </summary>
         /// <returns></returns>
         public static Formula CreateTripleSumFormula()
         {
-            var formula = new Formula()
-            {
-                Name = "Triple Sum",
-                Expressions = CreateTripleSumExpressions()
-            };
-
-            foreach(var expression in formula.Expressions)
-            {
-                expression.Formula = formula;
-            }
-
+            var links = CreateTripleSumLinks();
+            var formula = new Formula("Triple Sum", links);
             return formula;
         }
 
-        private static List<FormulaExpression> CreateTripleSumExpressions()
+        private static List<FormulaLink> CreateTripleSumLinks()
         {
-            var rootExpression = new FormulaExpression()
-            {
-                Parent = null,
-                Operand1 = Plus(),
-                Operand2 = Param3(),
-                Operator = Plus()
-            };
+            var topPlusNode = new FormulaNode(Plus());
+            var bottomPlusNode = new FormulaNode(Plus());
+            var param1Node = new FormulaNode(Param1());
+            var param2Node = new FormulaNode(Param2());
+            var param3Node = new FormulaNode(Param3());
+            var topPlusBottomPlusLink = new FormulaLink(LEFT, bottomPlusNode, topPlusNode);
+            var topPlusParam3Link = new FormulaLink(RIGHT, param3Node, topPlusNode);
+            var bottomPlusParam1Link = new FormulaLink(LEFT, param1Node, bottomPlusNode);
+            var bottomPlusParam2Link = new FormulaLink(RIGHT, param2Node, bottomPlusNode);
 
-            var innerSumExpression = new FormulaExpression()
+            return new List<FormulaLink>()
             {
-                Parent = rootExpression,
-                Operand1 = Param1(),
-                Operand2 = Param2(),
-                Operator = Plus()
-            };
-
-            return new List<FormulaExpression>()
-            {
-                rootExpression,
-                innerSumExpression
+                topPlusBottomPlusLink,
+                topPlusParam3Link,
+                bottomPlusParam1Link,
+                bottomPlusParam2Link
             };
         }
     }

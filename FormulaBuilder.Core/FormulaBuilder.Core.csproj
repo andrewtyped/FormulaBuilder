@@ -75,11 +75,13 @@
     <Compile Include="Logging\ILoggingService.cs" />
     <Compile Include="Logging\LoggingService.cs" />
     <Compile Include="Models\Formula.cs" />
-    <Compile Include="Models\FormulaExpression.cs" />
+    <Compile Include="Models\FormulaLink.cs" />
     <Compile Include="Models\FormulaNode.cs" />
-    <Compile Include="Models\Mappings\FormulaExpressionMap.cs" />
+    <Compile Include="Models\Mappings\FormulaLinkMap.cs" />
     <Compile Include="Models\Mappings\FormulaMap.cs" />
     <Compile Include="Models\Mappings\FormulaNodeMap.cs" />
+    <Compile Include="Models\Mappings\NodeMap.cs" />
+    <Compile Include="Models\Node.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

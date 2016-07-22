@@ -7,16 +7,13 @@ using System.Threading.Tasks;
 
 namespace FormulaBuilder.Core.Models.Mappings
 {
-    public class FormulaMap : ClassMap<Formula>
+    class NodeMap : ClassMap<Node>
     {
-        public FormulaMap()
+        public NodeMap()
         {
             Id(x => x.Id).GeneratedBy.Identity();
-            Map(x => x.Name).Not.Nullable().Length(200);
-            HasMany(x => x.Links)
-                .Cascade.All()
-                .Inverse()
-                .KeyColumn("FormulaId");
+            Map(x => x.Type).Not.Nullable().Length(50);
+            Map(x => x.Value).Not.Nullable().Length(100);
         }
     }
 }

@@ -12,8 +12,10 @@ namespace FormulaBuilder.Core.Models.Mappings
         public FormulaNodeMap()
         {
             Id(x => x.Id).GeneratedBy.Identity();
-            Map(x => x.Type).Not.Nullable().Length(50);
-            Map(x => x.Value).Not.Nullable().Length(100);
+            References(x => x.Node)
+                .Cascade.None()
+                .Not.Nullable()
+                .Column("NodeId");
         }
     }
 }

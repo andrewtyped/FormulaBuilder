@@ -9,31 +9,18 @@ namespace FormulaBuilder.Core.Models
     public class FormulaNode
     {
         public virtual int Id { get; protected internal set; }
-        public virtual string Type { get; protected internal set; }
-        public virtual string Value { get; protected internal set; }
+        public virtual Node Node { get; protected internal set; }
 
         protected FormulaNode()
         {
         }
 
-        public FormulaNode(string type, string value)
+        public FormulaNode(Node node)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            if (node == null)
+                throw new ArgumentNullException(nameof(node));
 
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-
-            Type = type;
-            Value = value;
+            Node = node;
         }
-    }
-
-    public class Operator : FormulaNode
-    {
-    }
-
-    public class Token : FormulaNode
-    {
     }
 }
