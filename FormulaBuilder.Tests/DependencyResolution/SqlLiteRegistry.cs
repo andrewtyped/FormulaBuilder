@@ -15,7 +15,6 @@ namespace FormulaBuilder.Tests.DependencyResolution
         public SqlLiteRegistry()
         {
             For<ISessionFactory>().Singleton().Use(InMemorySessionFactoryProvider.Instance.Initialize());
-            //For<ISession>().Use(InMemorySessionFactoryProvider.Instance.OpenSession());
             For<ISession>().Use(() => InMemorySessionFactoryProvider.Instance.OpenSession());
         }
     }

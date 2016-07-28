@@ -1,4 +1,5 @@
-﻿using FormulaBuilder.Core.Models;
+﻿using FormulaBuilder.Core.Domain;
+using FormulaBuilder.Core.Models;
 using FormulaBuilder.Tests.SqlLite;
 using NHibernate;
 using NHibernate.Linq;
@@ -14,25 +15,71 @@ namespace FormulaBuilder.Tests
     [TestFixture]
     public class FormulaBuilderTests : BaseUnitTest
     {
-        [Test]
-        public void Can_Persist_TestData()
-        {
-                TestData.InsertTestData(_session);
+        //private Formula tripleSumFormula;
+        //private FormulaParser parser;
 
-                var formulas = _session.Query<Formula>().ToList();
-                var link = _session.Query<FormulaLink>().ToList();
+        [SetUp]
+        public void FormulaBuilderSetup()
+        {
+            TestData.InsertTestData(_session);
         }
 
         [Test]
-        public void Can_Get_Topmost_Node_Of_Formula()
+        public void Can_Get_Root_Node_Of_Formula()
         {
-                TestData.InsertTestData(_session);
+            var tripleSumFormula = _session.Query<Formula>().Single(f => f.Name == "Triple Sum");
+            var builder = new FormulaParser(tripleSumFormula);
+            var rootNode = builder.GetRootNode(tripleSumFormula);
 
-                var tripleSumFormula = _session.Query<Formula>().Single(f => f.Name == "Triple Sum");
-                var builder = new Core.Domain.FormulaBuilder();
-                var topmostNode = builder.GetTopMostNode(tripleSumFormula);
+            Assert.That(rootNode.Node.Value == "+");
+        }
 
-                Assert.That(topmostNode.Node.Value == "+");
+        [Test]
+        public void Can_Get_Links_To_Node()
+        {
+            var tripleSumFormula = _session.Query<Formula>().Single(f => f.Name == "Triple Sum");
+            var builder = new FormulaParser(tripleSumFormula);
+            var rootNode = builder.GetRootNode(tripleSumFormula);
+
+            var linksToRootNode = builder.GetLinksTo(rootNode);
+
+            Assert.AreEqual(2,linksToRootNode.Count());
+
+            foreach (var link in linksToRootNode)
+            {
+                Assert.AreEqual(rootNode, link.TopNode);
+            }
+        
+        }
+
+        [Test]
+        public void Links_Are_Sorted_By_Position()
+        {
+            var tripleSumFormula = _session.Query<Formula>().Single(f => f.Name == "Triple Sum");
+            var parser = new FormulaParser(tripleSumFormula);
+            var rootNode = parser.GetRootNode(tripleSumFormula);
+
+            var linksToRootNode = parser.GetLinksTo(rootNode).ToList();
+            Assert.That(linksToRootNode, Is.Ordered.By(nameof(FormulaLink.LinkType)));
+        }
+
+        [Test]
+        public void Can_Execute_Triple_Sum_Formula()
+        {
+            var tripleSumFormula = _session.Query<Formula>().Single(f => f.Name == "Triple Sum");
+            var parser = new FormulaParser(tripleSumFormula);
+            var executable = parser.Parse(tripleSumFormula);
+
+            var tokens = new Dictionary<string, decimal>()
+            {
+                {"Param1", 1.00m },
+                {"Param2", 2.00m },
+                {"Param3", 3.00m }
+            };
+
+            var result = executable.Execute(tokens);
+            Assert.That(result == 6.00m);
+            
         }
     }
 }

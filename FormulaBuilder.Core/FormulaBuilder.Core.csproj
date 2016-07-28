@@ -44,6 +44,10 @@
       <HintPath>..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MiscUtil, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d3c42c4bfacf7596, processorArchitecture=MSIL">
+      <HintPath>..\packages\JonSkeet.MiscUtil.0.1\lib\net35-Client\MiscUtil.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\packages\NHibernate.4.0.4.4000\lib\net40\NHibernate.dll</HintPath>
       <Private>True</Private>
@@ -72,7 +76,12 @@
   <ItemGroup>
     <Compile Include="DependencyResolution\LoggingRegistry.cs" />
     <Compile Include="DependencyResolution\NHibernateRegistry.cs" />
-    <Compile Include="Domain\FormulaBuilder.cs" />
+    <Compile Include="Domain\ExecutableFormula.cs" />
+    <Compile Include="Domain\ExecutableFormulaBuilder.cs" />
+    <Compile Include="Domain\FormulaParser.cs" />
+    <Compile Include="Domain\FormulaStep.cs" />
+    <Compile Include="Domain\OperationStep.cs" />
+    <Compile Include="Domain\TokenStep.cs" />
     <Compile Include="Logging\ILoggingService.cs" />
     <Compile Include="Logging\LoggingService.cs" />
     <Compile Include="Models\Formula.cs" />
