@@ -10,8 +10,8 @@ namespace FormulaBuilder.Tests.SqlLite
 {
     internal static class TestData
     {
-        private static NodeType OPERATOR = new NodeType(1,"operator");
-        private static NodeType TOKEN = new NodeType(2,"token");
+        private static NodeTypeEntity OPERATOR = new NodeTypeEntity(1,"operator");
+        private static NodeTypeEntity TOKEN = new NodeTypeEntity(2,"token");
         private const string PLUS = "+";
         private const string PARAM1 = "Param1";
         private const string PARAM2 = "Param2";

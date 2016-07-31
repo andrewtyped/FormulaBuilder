@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace FormulaBuilder.Core.Models.Mappings
 {
-    class NodeTypeMap : ClassMap<NodeType>
+    class NodeTypeEntityMap : ClassMap<NodeTypeEntity>
     {
-        public NodeTypeMap()
+        public NodeTypeEntityMap()
         {
             Id(x => x.Id).GeneratedBy.Assigned();
             Map(x => x.Name).Not.Nullable();

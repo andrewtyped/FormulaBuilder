@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace FormulaBuilder.Core.Models
 {
-    public class NodeType
+    public class NodeTypeEntity
     {
         public virtual int Id { get; protected internal set; }
         public virtual string Name { get; protected internal set; }
-        protected NodeType() { }
+        protected NodeTypeEntity() { }
 
-        internal NodeType(int id, string name)
+        internal NodeTypeEntity(int id, string name)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));

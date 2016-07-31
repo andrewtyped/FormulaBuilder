@@ -80,6 +80,7 @@
     <Compile Include="Domain\ExecutableFormulaBuilder.cs" />
     <Compile Include="Domain\FormulaParser.cs" />
     <Compile Include="Domain\FormulaStep.cs" />
+    <Compile Include="Domain\Model\NodeType.cs" />
     <Compile Include="Domain\OperationStep.cs" />
     <Compile Include="Domain\TokenStep.cs" />
     <Compile Include="Logging\ILoggingService.cs" />
@@ -88,8 +89,8 @@
     <Compile Include="Models\FormulaNode.cs" />
     <Compile Include="Models\Mappings\FormulaMap.cs" />
     <Compile Include="Models\Mappings\FormulaNodeMap.cs" />
-    <Compile Include="Models\Mappings\NodeTypeMap.cs" />
-    <Compile Include="Models\NodeType.cs" />
+    <Compile Include="Models\Mappings\NodeTypeEntityMap.cs" />
+    <Compile Include="Models\NodeTypeEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
