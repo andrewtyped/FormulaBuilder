@@ -29,7 +29,7 @@ namespace FormulaBuilder.Core.Domain
         {
             _executableFormulaBuilder = _executableFormulaBuilder
                 .EnterContext()
-                .WithStep(node);
+                .WithStep(node.Node);
 
             var linksToNode = GetLinksTo(node);
             foreach (var link in linksToNode)
