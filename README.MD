@@ -1,6 +1,6 @@
-﻿Console Seed
+Formula Builder
 ============
-A seed project for playing around with various domain and data models.  
+An API that uses relational data to define tree structures representing arithmetic formulas.
 
 Stack
 -----
