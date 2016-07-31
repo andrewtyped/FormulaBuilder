@@ -91,7 +91,9 @@
     <Compile Include="Models\Mappings\FormulaMap.cs" />
     <Compile Include="Models\Mappings\FormulaNodeMap.cs" />
     <Compile Include="Models\Mappings\NodeMap.cs" />
+    <Compile Include="Models\Mappings\NodeTypeMap.cs" />
     <Compile Include="Models\Node.cs" />
+    <Compile Include="Models\NodeType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

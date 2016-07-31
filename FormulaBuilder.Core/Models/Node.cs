@@ -9,14 +9,14 @@ namespace FormulaBuilder.Core.Models
     public class Node
     {
         public virtual int Id { get; protected internal set; }
-        public virtual string Type { get; protected internal set; }
+        public virtual NodeType Type { get; protected internal set; }
         public virtual string Value { get; protected internal set; }
 
         protected Node()
         {
         }
 
-        public Node(string type, string value)
+        public Node(NodeType type, string value)
         {
             if (type == null)
                 throw new ArgumentNullException(nameof(type));

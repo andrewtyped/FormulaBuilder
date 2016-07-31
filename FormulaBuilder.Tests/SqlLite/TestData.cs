@@ -10,8 +10,8 @@ namespace FormulaBuilder.Tests.SqlLite
 {
     internal static class TestData
     {
-        private const string OPERATOR = "operator";
-        private const string TOKEN = "token";
+        private static NodeType OPERATOR = new NodeType(1,"operator");
+        private static NodeType TOKEN = new NodeType(2,"token");
         public static void InsertTestData(ISession session)
         {
             using (var tx = session.BeginTransaction())

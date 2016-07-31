@@ -37,14 +37,10 @@ namespace FormulaBuilder.Core.Domain
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
 
-
-            if (string.IsNullOrWhiteSpace(node.Type))
-                throw new InvalidOperationException();
-
             var nodeType = node.Type;
             FormulaStep step;
 
-            switch(nodeType)
+            switch(nodeType.Name)
             {
                 case "operator":
                     step = OperationStep.Create(node.Value, _currentContext);
