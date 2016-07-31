@@ -29,14 +29,13 @@ namespace FormulaBuilder.Core.Domain
         {
             _executableFormulaBuilder = _executableFormulaBuilder
                 .EnterContext()
-                .WithStep(node.Node);
+                .WithStep(node);
 
-            var linksToNode = GetLinksTo(node);
-            foreach (var link in linksToNode)
+            var childNodes = GetChildNodes(node);
+            foreach (var childNode in childNodes)
             {
-                Parse(link.BottomNode);
+                Parse(childNode);
             }
-
 
             return _executableFormulaBuilder
                 .ExitContext()
@@ -46,28 +45,18 @@ namespace FormulaBuilder.Core.Domain
         internal FormulaNode GetRootNode(Formula formula)
         {
             //the top most node is the one that never appears in a links bottomnode
-            var bottomNodes = formula.Links
-                .Select(l => l.BottomNode.Id)
-                .Distinct();
-
-            var topNodes = formula.Links
-                .Select(l => l.TopNode.Id)
-                .Distinct();
-
-            var topmostNodeId = topNodes.Except(bottomNodes).Single();
-
-            var topmostNode = formula.Links.Where(l => l.TopNode.Id == topmostNodeId).Select(l => l.TopNode).FirstOrDefault();
-
-            return topmostNode;
+            var rootNode = formula.Nodes.Single(n => n.Parent == null);
+            return rootNode;
         }
 
-        internal IEnumerable<FormulaLink> GetLinksTo(FormulaNode node)
+        internal IEnumerable<FormulaNode> GetChildNodes(FormulaNode parentNode)
         {
-            var childLinks = _formula.Links
-                .Where(link => link.TopNode.Id == node.Id)
-                .OrderBy(link => link.Position);
+            var childNodes = _formula.Nodes
+                .Where(node => node.Parent != null)
+                .Where(node => node.Parent.Id == parentNode.Id)
+                .OrderBy(node => node.Position);
 
-            return childLinks;
+            return childNodes;
         }
     }
 }

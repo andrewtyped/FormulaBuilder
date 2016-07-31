@@ -12,15 +12,14 @@ namespace FormulaBuilder.Tests.SqlLite
     {
         private static NodeType OPERATOR = new NodeType(1,"operator");
         private static NodeType TOKEN = new NodeType(2,"token");
+        private const string PLUS = "+";
+        private const string PARAM1 = "Param1";
+        private const string PARAM2 = "Param2";
+        private const string PARAM3 = "Param3";
         public static void InsertTestData(ISession session)
         {
             using (var tx = session.BeginTransaction())
             {
-                foreach (var node in CreateNodes())
-                {
-                    session.Save(node);
-                }
-
                 session.Save(CreateTripleSumFormula());
 
                 tx.Commit();
@@ -29,70 +28,32 @@ namespace FormulaBuilder.Tests.SqlLite
             session.Clear();
         }
 
-        private static List<Node> CreateNodes()
-        {
-            return new List<Node>()
-            {
-                Plus(),
-                Param1(),
-                Param2(),
-                Param3()
-            };
-        }
-
-        private static Node _plus;
-        private static Node Plus()
-        {
-            return _plus ?? (_plus = new Node(OPERATOR, "+"));
-        }
-
-        private static Node _param1;
-        private static Node Param1()
-        {
-            return  _param1 ?? (_param1 = new Node(TOKEN, "Param1"));
-        }
-
-        private static Node _param2;
-        private static Node Param2()
-        {
-            return _param2 ?? (_param2 = new Node(TOKEN, "Param2"));
-        }
-
-        private static Node _param3;
-        private static Node Param3()
-        {
-            return _param3 ?? (_param3 = new Node(TOKEN, "Param3"));
-        }
-
         /// <summary>
         /// encapsulates the Link (+ (+ a b) c)
         /// </summary>
         /// <returns></returns>
         public static Formula CreateTripleSumFormula()
         {
-            var links = CreateTripleSumLinks();
-            var formula = new Formula("Triple Sum", links);
+            var formula = new Formula("Triple Sum");
+            var nodes = CreateTripleSumNodes(formula);
             return formula;
         }
 
-        private static List<FormulaLink> CreateTripleSumLinks()
+        private static List<FormulaNode> CreateTripleSumNodes(Formula formula)
         {
-            var topPlusNode = new FormulaNode(Plus());
-            var bottomPlusNode = new FormulaNode(Plus());
-            var param1Node = new FormulaNode(Param1());
-            var param2Node = new FormulaNode(Param2());
-            var param3Node = new FormulaNode(Param3());
-            var topPlusBottomPlusLink = new FormulaLink(0, bottomPlusNode, topPlusNode);
-            var topPlusParam3Link = new FormulaLink(1, param3Node, topPlusNode);
-            var bottomPlusParam1Link = new FormulaLink(0, param1Node, bottomPlusNode);
-            var bottomPlusParam2Link = new FormulaLink(1, param2Node, bottomPlusNode);
+            var topPlusNode = new FormulaNode(formula, null, OPERATOR,PLUS, 0);
+            var bottomPlusNode = new FormulaNode(formula, topPlusNode, OPERATOR, PLUS,0);
+            var param1Node = new FormulaNode(formula, bottomPlusNode, TOKEN, PARAM1, 0);
+            var param2Node = new FormulaNode(formula, bottomPlusNode, TOKEN, PARAM2, 0);
+            var param3Node = new FormulaNode(formula, topPlusNode, TOKEN, PARAM3, 0);
 
-            return new List<FormulaLink>()
+            return new List<FormulaNode>()
             {
-                topPlusBottomPlusLink,
-                topPlusParam3Link,
-                bottomPlusParam1Link,
-                bottomPlusParam2Link
+                topPlusNode,
+                bottomPlusNode,
+                param1Node,
+                param2Node,
+                param3Node,
             };
         }
     }

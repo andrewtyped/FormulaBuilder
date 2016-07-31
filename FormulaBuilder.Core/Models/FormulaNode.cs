@@ -9,18 +9,34 @@ namespace FormulaBuilder.Core.Models
     public class FormulaNode
     {
         public virtual int Id { get; protected internal set; }
-        public virtual Node Node { get; protected internal set; }
+        public virtual Formula Formula { get; protected internal set; }
+        public virtual FormulaNode Parent { get; protected internal set; }
+        public virtual NodeType Type { get; protected internal set; }
+
+        public virtual string Value { get; protected internal set; }
+        public virtual int Position { get; protected internal set; }
+
 
         protected FormulaNode()
         {
         }
 
-        public FormulaNode(Node node)
+        public FormulaNode(Formula formula, FormulaNode parent, NodeType type, string value, int position)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            if (formula == null)
+                throw new ArgumentNullException(nameof(formula));
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
 
-            Node = node;
+            Formula = formula;
+            Parent = parent;
+            Type = type;
+            Value = value;
+            Position = position;
+
+            formula.AddNode(this);
         }
     }
 }

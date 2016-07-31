@@ -11,34 +11,29 @@ namespace FormulaBuilder.Core.Models
         public virtual int Id { get; protected internal set; }
         public virtual string Name { get; protected internal set; }
 
-        public virtual ICollection<FormulaLink> Links { get; protected internal set; }
+        public virtual ICollection<FormulaNode> Nodes { get; protected internal set; }
 
         protected Formula()
         {
-            Links = new List<FormulaLink>();
+            Nodes = new List<FormulaNode>();
         }
 
-        public Formula(string name, ICollection<FormulaLink> links)
+        public Formula(string name)
         {
-            Links = new List<FormulaLink>();
+            Nodes = new List<FormulaNode>();
 
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
-            if (links == null)
-                throw new ArgumentNullException(nameof(links));
 
             Name = name;
+        }
 
-            foreach (var link in links)
-            {
-                if (link == null)
-                    throw new InvalidOperationException($"no member of {nameof(links)} may be null");
+        protected internal virtual void AddNode(FormulaNode node)
+        {
+            if (node == null)
+                throw new ArgumentNullException(nameof(node));
 
-                link.Formula = this;
-                Links.Add(link);
-            }
-
-
+            Nodes.Add(node);
         }
 
     }
