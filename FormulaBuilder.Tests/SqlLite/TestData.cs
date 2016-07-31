@@ -12,8 +12,6 @@ namespace FormulaBuilder.Tests.SqlLite
     {
         private const string OPERATOR = "operator";
         private const string TOKEN = "token";
-        private const string LEFT = "left";
-        private const string RIGHT = "right";
         public static void InsertTestData(ISession session)
         {
             using (var tx = session.BeginTransaction())
@@ -84,10 +82,10 @@ namespace FormulaBuilder.Tests.SqlLite
             var param1Node = new FormulaNode(Param1());
             var param2Node = new FormulaNode(Param2());
             var param3Node = new FormulaNode(Param3());
-            var topPlusBottomPlusLink = new FormulaLink(LEFT, bottomPlusNode, topPlusNode);
-            var topPlusParam3Link = new FormulaLink(RIGHT, param3Node, topPlusNode);
-            var bottomPlusParam1Link = new FormulaLink(LEFT, param1Node, bottomPlusNode);
-            var bottomPlusParam2Link = new FormulaLink(RIGHT, param2Node, bottomPlusNode);
+            var topPlusBottomPlusLink = new FormulaLink(0, bottomPlusNode, topPlusNode);
+            var topPlusParam3Link = new FormulaLink(1, param3Node, topPlusNode);
+            var bottomPlusParam1Link = new FormulaLink(0, param1Node, bottomPlusNode);
+            var bottomPlusParam2Link = new FormulaLink(1, param2Node, bottomPlusNode);
 
             return new List<FormulaLink>()
             {

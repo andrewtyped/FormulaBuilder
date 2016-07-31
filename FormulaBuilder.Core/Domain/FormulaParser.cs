@@ -65,7 +65,7 @@ namespace FormulaBuilder.Core.Domain
         {
             var childLinks = _formula.Links
                 .Where(link => link.TopNode.Id == node.Id)
-                .OrderBy(link => link.LinkType);
+                .OrderBy(link => link.Position);
 
             return childLinks;
         }

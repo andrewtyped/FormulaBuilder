@@ -10,7 +10,7 @@ namespace FormulaBuilder.Core.Models
     {
         public virtual int Id { get; protected internal set; }
         public virtual Formula Formula { get; protected internal set; }
-        public virtual string LinkType { get; protected internal set; }
+        public virtual int Position { get; protected internal set; }
         public virtual FormulaNode BottomNode { get; protected internal set; }
         public virtual FormulaNode TopNode { get; protected internal set; }
 
@@ -18,16 +18,16 @@ namespace FormulaBuilder.Core.Models
         {
         }
 
-        public FormulaLink(string linkType, FormulaNode bottomNode, FormulaNode topNode)
+        public FormulaLink(int position, FormulaNode bottomNode, FormulaNode topNode)
         {
-            if (linkType == null)
-                throw new ArgumentException(nameof(linkType));
+            if (position < 0)
+                throw new ArgumentException(nameof(position));
             if (bottomNode == null)
-                throw new ArgumentException(nameof(bottomNode));
+                throw new ArgumentNullException(nameof(bottomNode));
             if (topNode == null)
                 throw new ArgumentNullException(nameof(topNode));
 
-            LinkType = linkType;
+            Position = position;
             BottomNode = bottomNode;
             TopNode = topNode;
         }

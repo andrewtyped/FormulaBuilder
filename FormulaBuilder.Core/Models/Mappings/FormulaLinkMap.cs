@@ -15,7 +15,7 @@ namespace FormulaBuilder.Core.Models.Mappings
             References(x => x.Formula)
                 .Cascade.None()
                 .Column("FormulaId");
-            Map(x => x.LinkType);
+            Map(x => x.Position);
             References(x => x.BottomNode)
                 .Cascade.All()
                 .Column("BottomNodeId");

@@ -60,7 +60,7 @@ namespace FormulaBuilder.Tests
             var rootNode = parser.GetRootNode(tripleSumFormula);
 
             var linksToRootNode = parser.GetLinksTo(rootNode).ToList();
-            Assert.That(linksToRootNode, Is.Ordered.By(nameof(FormulaLink.LinkType)));
+            Assert.That(linksToRootNode, Is.Ordered.By(nameof(FormulaLink.Position)));
         }
 
         [Test]
