@@ -21,17 +21,18 @@ namespace FormulaBuilder.Core.Domain
         }
         public ExecutableFormula<decimal> Parse(Formula formula)
         {
-            var rootNode = GetRootNode(formula);
+            var rootNode = formula.RootNode;
             return Parse(rootNode);
         }
 
-        internal ExecutableFormula<decimal> Parse(FormulaNode node)
+        internal ExecutableFormula<decimal> Parse(NodeEntity node)
         {
             _executableFormulaBuilder = _executableFormulaBuilder
                 .EnterContext()
                 .WithStep(node);
 
-            var childNodes = GetChildNodes(node);
+            var childNodes = node.Children;
+
             foreach (var childNode in childNodes)
             {
                 Parse(childNode);
@@ -40,23 +41,6 @@ namespace FormulaBuilder.Core.Domain
             return _executableFormulaBuilder
                 .ExitContext()
                 .Build<decimal>();
-        }
-
-        internal FormulaNode GetRootNode(Formula formula)
-        {
-            //the top most node is the one that never appears in a links bottomnode
-            var rootNode = formula.Nodes.Single(n => n.Parent == null);
-            return rootNode;
-        }
-
-        internal IEnumerable<FormulaNode> GetChildNodes(FormulaNode parentNode)
-        {
-            var childNodes = _formula.Nodes
-                .Where(node => node.Parent != null)
-                .Where(node => node.Parent.Id == parentNode.Id)
-                .OrderBy(node => node.Position);
-
-            return childNodes;
         }
     }
 }

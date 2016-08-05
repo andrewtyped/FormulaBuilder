@@ -20,7 +20,10 @@ namespace FormulaBuilder.Tests.SqlLite
         {
             using (var tx = session.BeginTransaction())
             {
-                session.Save(CreateTripleSumFormula());
+                var tripleSumFormula = CreateTripleSumFormula();
+                //WHY CANT I SAVE WITHOUT GETTING DUPLICATES BACK????
+                SaveNode(tripleSumFormula.RootNode, session);
+                session.Save(tripleSumFormula);
 
                 tx.Commit();
             }
@@ -34,27 +37,38 @@ namespace FormulaBuilder.Tests.SqlLite
         /// <returns></returns>
         public static Formula CreateTripleSumFormula()
         {
-            var formula = new Formula("Triple Sum");
-            var nodes = CreateTripleSumNodes(formula);
+            var rootNode = CreateTripleSumNodes();
+            var formula = new Formula("Triple Sum", rootNode);
             return formula;
         }
 
-        private static List<FormulaNode> CreateTripleSumNodes(Formula formula)
+        private static NodeEntity CreateTripleSumNodes()
         {
-            var topPlusNode = new FormulaNode(formula, null, OPERATOR,PLUS, 0);
-            var bottomPlusNode = new FormulaNode(formula, topPlusNode, OPERATOR, PLUS,0);
-            var param1Node = new FormulaNode(formula, bottomPlusNode, TOKEN, PARAM1, 0);
-            var param2Node = new FormulaNode(formula, bottomPlusNode, TOKEN, PARAM2, 0);
-            var param3Node = new FormulaNode(formula, topPlusNode, TOKEN, PARAM3, 0);
-
-            return new List<FormulaNode>()
+            var param1Node = new NodeEntity(1,TOKEN, PARAM1,0, new List<NodeEntity>());
+            var param2Node = new NodeEntity(2,TOKEN, PARAM2,1, new List<NodeEntity>());
+            var param3Node = new NodeEntity(3,TOKEN, PARAM3, 0, new List<NodeEntity>());
+            var bottomPlusNode = new NodeEntity(4,OPERATOR, PLUS,1, new List<NodeEntity>()
             {
-                topPlusNode,
-                bottomPlusNode,
                 param1Node,
-                param2Node,
-                param3Node,
-            };
+                param2Node
+            });
+            var topPlusNode = new NodeEntity(5,OPERATOR,PLUS,0,new List<NodeEntity>()
+            {
+                bottomPlusNode,
+                param3Node
+            });
+
+            return topPlusNode;
+        }
+
+        private static void SaveNode(NodeEntity node, ISession session)
+        {
+            foreach(var child in node.Children)
+            {
+                SaveNode(child, session);
+            }
+
+            session.SaveOrUpdate(node);
         }
     }
 }

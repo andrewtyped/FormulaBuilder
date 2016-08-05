@@ -32,7 +32,7 @@ namespace FormulaBuilder.Core.Domain
             return this;
         }
 
-        public ExecutableFormulaBuilder WithStep(FormulaNode node)
+        public ExecutableFormulaBuilder WithStep(NodeEntity node)
         {
             if (node == null)
                 throw new ArgumentNullException(nameof(node));

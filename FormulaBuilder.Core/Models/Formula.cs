@@ -10,31 +10,21 @@ namespace FormulaBuilder.Core.Models
     {
         public virtual int Id { get; protected internal set; }
         public virtual string Name { get; protected internal set; }
-
-        public virtual ICollection<FormulaNode> Nodes { get; protected internal set; }
+        public virtual NodeEntity RootNode { get; protected internal set; }
 
         protected Formula()
         {
-            Nodes = new List<FormulaNode>();
         }
 
-        public Formula(string name)
+        public Formula(string name, NodeEntity rootNode)
         {
-            Nodes = new List<FormulaNode>();
-
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
+            if (rootNode == null)
+                throw new ArgumentNullException(nameof(rootNode));
 
             Name = name;
+            RootNode = rootNode;
         }
-
-        protected internal virtual void AddNode(FormulaNode node)
-        {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
-
-            Nodes.Add(node);
-        }
-
     }
 }

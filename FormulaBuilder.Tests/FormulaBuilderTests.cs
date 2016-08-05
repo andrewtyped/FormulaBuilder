@@ -25,45 +25,6 @@ namespace FormulaBuilder.Tests
         }
 
         [Test]
-        public void Can_Get_Root_Node_Of_Formula()
-        {
-            var tripleSumFormula = _session.Query<Formula>().Single(f => f.Name == "Triple Sum");
-            var builder = new FormulaParser(tripleSumFormula);
-            var rootNode = builder.GetRootNode(tripleSumFormula);
-
-            Assert.That(rootNode.Value == "+");
-        }
-
-        [Test]
-        public void Can_Get_Links_To_Node()
-        {
-            var tripleSumFormula = _session.Query<Formula>().Single(f => f.Name == "Triple Sum");
-            var parser = new FormulaParser(tripleSumFormula);
-            var rootNode = parser.GetRootNode(tripleSumFormula);
-
-            var childNodes = parser.GetChildNodes(rootNode);
-
-            Assert.AreEqual(2, childNodes.Count());
-
-            foreach (var node in childNodes)
-            {
-                Assert.AreEqual(rootNode, node.Parent);
-            }
-        
-        }
-
-        [Test]
-        public void Links_Are_Sorted_By_Position()
-        {
-            var tripleSumFormula = _session.Query<Formula>().Single(f => f.Name == "Triple Sum");
-            var parser = new FormulaParser(tripleSumFormula);
-            var rootNode = parser.GetRootNode(tripleSumFormula);
-
-            var childNodes = parser.GetChildNodes(rootNode).ToList();
-            Assert.That(childNodes, Is.Ordered.By(nameof(FormulaNode.Position)));
-        }
-
-        [Test]
         public void Can_Execute_Triple_Sum_Formula()
         {
             var tripleSumFormula = _session.Query<Formula>().Single(f => f.Name == "Triple Sum");

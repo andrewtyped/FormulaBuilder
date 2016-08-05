@@ -13,10 +13,7 @@ namespace FormulaBuilder.Core.Models.Mappings
         {
             Id(x => x.Id).GeneratedBy.Identity();
             Map(x => x.Name).Not.Nullable().Length(200);
-            HasMany(x => x.Nodes)
-                .Cascade.All()
-                .Inverse()
-                .KeyColumn("FormulaId");
+            References(x => x.RootNode).Cascade.None().Column("RootNodeId");
         }
     }
 }
