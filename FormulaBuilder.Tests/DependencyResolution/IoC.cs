@@ -2,6 +2,7 @@
 using StructureMap;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,10 +19,12 @@ namespace FormulaBuilder.Tests.DependencyResolution
         {
             lock (_locker)
             {
+                var nhibernateRegistry = new NHibernateRegistry(ConfigurationManager.ConnectionStrings[0].ConnectionString);
                 _unitTestContainer = _unitTestContainer ?? new Container(
                     c =>
                     {
-                        c.AddRegistry<SqlLiteRegistry>();
+                        c.AddRegistry(nhibernateRegistry);
+                        //c.AddRegistry<SqlLiteRegistry>();
                     });
 
                 var debugStructureMapAssemblyReport = _unitTestContainer.WhatDoIHave();

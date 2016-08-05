@@ -11,25 +11,23 @@ namespace FormulaBuilder.Core.Models.Mappings
     {
         public NodeEntityMap()
         {
+            Schema("fb");
+            Table("Node");
             Id(x => x.Id).GeneratedBy.Assigned();
             References(x => x.Type)
                 .Cascade.SaveUpdate()
                 .Not.Nullable()
-                .Column("TypeId");
+                .Column("NodeTypeId");
             Map(x => x.Value)
                 .Not.Nullable();
             Map(x => x.Position);
-            HasManyToMany(m => m.Parents)
-                .Table("ParentNodeChildNodeMapping")
-                .ParentKeyColumn("ChildNodeId")
-                .ChildKeyColumn("ParentNodeId")
-                .Fetch.Subselect()
+            References(m => m.Parent)
+                .Cascade.None()
+                .Column("ParentNodeId")
                 .LazyLoad()
-                .Cascade.None();           
-            HasManyToMany(m => m.Children)
-                .Table("ParentNodeChildNodeMapping")
-                .ParentKeyColumn("ParentNodeId")
-                .ChildKeyColumn("ChildNodeId")
+                .Cascade.None();
+            HasMany(m => m.Children)
+                .KeyColumn("ParentNodeId")
                 .Fetch.Subselect()
                 .LazyLoad()
                 .Cascade.None();

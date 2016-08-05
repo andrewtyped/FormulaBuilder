@@ -11,6 +11,8 @@ namespace FormulaBuilder.Core.Models.Mappings
     {
         public NodeTypeEntityMap()
         {
+            Schema("fb");
+            Table("NodeType");
             Id(x => x.Id).GeneratedBy.Assigned();
             Map(x => x.Name).Not.Nullable();
         }

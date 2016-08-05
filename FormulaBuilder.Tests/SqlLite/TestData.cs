@@ -21,9 +21,8 @@ namespace FormulaBuilder.Tests.SqlLite
             using (var tx = session.BeginTransaction())
             {
                 var tripleSumFormula = CreateTripleSumFormula();
-                //WHY CANT I SAVE WITHOUT GETTING DUPLICATES BACK????
                 SaveNode(tripleSumFormula.RootNode, session);
-                session.Save(tripleSumFormula);
+                session.SaveOrUpdate(tripleSumFormula);
 
                 tx.Commit();
             }

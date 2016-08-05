@@ -16,7 +16,7 @@ namespace FormulaBuilder.Core.Models
 
         public virtual IList<NodeEntity> Children { get; protected internal set; }
 
-        protected internal virtual IList<NodeEntity> Parents { get; protected set; }
+        protected internal virtual NodeEntity Parent { get; protected set; }
 
 
         protected NodeEntity()
@@ -40,11 +40,9 @@ namespace FormulaBuilder.Core.Models
             Position = position;
             Children = children;
 
-            Parents = new List<NodeEntity>();
-
             foreach (var child in children)
             {
-                child.Parents.Add(this);
+                child.Parent = this;
             }
         }
     }
