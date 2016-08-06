@@ -34,10 +34,10 @@ namespace FormulaBuilder.Tests.SqlLite
         /// encapsulates the Link (+ (+ a b) c)
         /// </summary>
         /// <returns></returns>
-        public static Formula CreateTripleSumFormula()
+        public static FormulaEntity CreateTripleSumFormula()
         {
             var rootNode = CreateTripleSumNodes();
-            var formula = new Formula("Triple Sum", rootNode);
+            var formula = new FormulaEntity("Triple Sum", rootNode);
             return formula;
         }
 

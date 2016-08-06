@@ -1,9 +1,6 @@
-﻿using FormulaBuilder.Core.Models;
+﻿using FormulaBuilder.Core.Domain.Model;
+using FormulaBuilder.Core.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FormulaBuilder.Core.Domain
 {
@@ -25,7 +22,7 @@ namespace FormulaBuilder.Core.Domain
             return Parse(rootNode);
         }
 
-        internal ExecutableFormula<decimal> Parse(NodeEntity node)
+        internal ExecutableFormula<decimal> Parse(Node node)
         {
             _executableFormulaBuilder = _executableFormulaBuilder
                 .EnterContext()

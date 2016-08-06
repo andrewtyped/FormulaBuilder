@@ -1,4 +1,4 @@
-﻿using FormulaBuilder.Core.Models;
+﻿using FormulaBuilder.Core.Domain.Model;
 using System;
 using System.Collections.Generic;
 
@@ -32,7 +32,7 @@ namespace FormulaBuilder.Core.Domain
             return this;
         }
 
-        public ExecutableFormulaBuilder WithStep(NodeEntity node)
+        public ExecutableFormulaBuilder WithStep(Node node)
         {
             if (node == null)
                 throw new ArgumentNullException(nameof(node));

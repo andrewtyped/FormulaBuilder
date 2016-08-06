@@ -1,4 +1,5 @@
 ﻿using FormulaBuilder.Core.Domain;
+using FormulaBuilder.Core.Domain.Model;
 using FormulaBuilder.Core.Models;
 using FormulaBuilder.Tests.SqlLite;
 using NHibernate;
@@ -27,7 +28,9 @@ namespace FormulaBuilder.Tests
         [Test]
         public void Can_Execute_Triple_Sum_Formula()
         {
-            var tripleSumFormula = _session.Query<Formula>().Single(f => f.Name == "Triple Sum");
+            var tripleSumFormulaEntity = _session.Query<FormulaEntity>().Single(f => f.Name == "Triple Sum");
+            var tripleSumFormula = new Formula(tripleSumFormulaEntity);
+
             var parser = new FormulaParser(tripleSumFormula);
             var executable = parser.Parse(tripleSumFormula);
 
