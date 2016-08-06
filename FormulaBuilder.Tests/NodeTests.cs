@@ -17,30 +17,25 @@ namespace FormulaBuilder.Tests
         [Test]
         public void Can_Create_Node()
         {
-            /*
-            var nodeEntity = new NodeEntity(
-                new Formula("test"),
-                null, 
+            var childEntity = new NodeEntity(
                 new NodeTypeEntity(1, "token"), 
                 "test", 
-                0
+                0,
+                new List<NodeEntity>()
             );
-            var childNodeEntity = new NodeEntity(
-                new Formula("test"),
-                nodeEntity,
+            var parentEntity = new NodeEntity(
                 new NodeTypeEntity(1, "operator"),
                 "+",
-                0);
-            var childNode = new Node(childNodeEntity, new List<Node>());
-            var node = new Node(nodeEntity, new List<Node>() { childNode });
-            var expectedNodeType = NodeType.Create(nodeEntity.Type);
+                0,
+                new List<NodeEntity>() { childEntity });
+            var childNode = new Node(childEntity);
+            var parentNode = new Node(parentEntity);
+            var expectedNodeType = NodeType.Create(parentEntity.Type);
 
-            Assert.AreEqual(nodeEntity.Id, node.Id);
-            Assert.AreEqual(expectedNodeType, node.Type);
-            Assert.AreEqual(nodeEntity.Value, node.Value);
-            Assert.AreEqual(nodeEntity.Position, node.Position);
-            Assert.AreEqual(1, node.Children.Count());
-            */
+            Assert.AreEqual(expectedNodeType, parentNode.Type);
+            Assert.AreEqual(parentEntity.Value, parentNode.Value);
+            Assert.AreEqual(parentEntity.Position, parentNode.Position);
+            Assert.AreEqual(parentEntity.Children.Count(), parentNode.Children.Count());
         }
     }
 }

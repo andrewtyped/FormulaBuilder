@@ -43,15 +43,15 @@ namespace FormulaBuilder.Tests.SqlLite
 
         private static NodeEntity CreateTripleSumNodes()
         {
-            var param1Node = new NodeEntity(1,TOKEN, PARAM1,0, new List<NodeEntity>());
-            var param2Node = new NodeEntity(2,TOKEN, PARAM2,1, new List<NodeEntity>());
-            var param3Node = new NodeEntity(3,TOKEN, PARAM3, 0, new List<NodeEntity>());
-            var bottomPlusNode = new NodeEntity(4,OPERATOR, PLUS,1, new List<NodeEntity>()
+            var param1Node = new NodeEntity(TOKEN, PARAM1,0, new List<NodeEntity>());
+            var param2Node = new NodeEntity(TOKEN, PARAM2,1, new List<NodeEntity>());
+            var param3Node = new NodeEntity(TOKEN, PARAM3, 0, new List<NodeEntity>());
+            var bottomPlusNode = new NodeEntity(OPERATOR, PLUS,1, new List<NodeEntity>()
             {
                 param1Node,
                 param2Node
             });
-            var topPlusNode = new NodeEntity(5,OPERATOR,PLUS,0,new List<NodeEntity>()
+            var topPlusNode = new NodeEntity(OPERATOR,PLUS,0,new List<NodeEntity>()
             {
                 bottomPlusNode,
                 param3Node

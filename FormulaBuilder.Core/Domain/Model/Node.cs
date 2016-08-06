@@ -15,18 +15,16 @@ namespace FormulaBuilder.Core.Domain.Model
         public int Position { get; }
         public IEnumerable<Node> Children { get; }
 
-        public Node(NodeEntity nodeEntity, IEnumerable<Node> children)
+        public Node(NodeEntity nodeEntity)
         {
             if (nodeEntity == null)
                 throw new ArgumentNullException(nameof(nodeEntity));
-            if (children == null)
-                throw new ArgumentNullException(nameof(children));
 
             Id = nodeEntity.Id;
             Type = NodeType.Create(nodeEntity.Type);
             Value = nodeEntity.Value;
             Position = nodeEntity.Position;
-            Children = children;
+            Children = nodeEntity.Children.Select(ne => new Node(ne));
         }
     }
 }

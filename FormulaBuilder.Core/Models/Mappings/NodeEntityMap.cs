@@ -13,7 +13,7 @@ namespace FormulaBuilder.Core.Models.Mappings
         {
             Schema("fb");
             Table("Node");
-            Id(x => x.Id).GeneratedBy.Assigned();
+            Id(x => x.Id).GeneratedBy.Identity();
             References(x => x.Type)
                 .Cascade.SaveUpdate()
                 .Not.Nullable()

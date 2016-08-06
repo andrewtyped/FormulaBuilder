@@ -23,10 +23,8 @@ namespace FormulaBuilder.Core.Models
         {
         }
 
-        public NodeEntity(int id, NodeTypeEntity type, string value, int position, IList<NodeEntity> children)
+        public NodeEntity(NodeTypeEntity type, string value, int position, IList<NodeEntity> children)
         {
-            if (id <= 0)
-                throw new ArgumentException("id must be greater than 0", nameof(id));
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
             if (value == null)
@@ -34,7 +32,6 @@ namespace FormulaBuilder.Core.Models
             if (children == null)
                 throw new ArgumentNullException(nameof(children));
 
-            Id = id;
             Type = type;
             Value = value;
             Position = position;

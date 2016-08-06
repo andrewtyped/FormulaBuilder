@@ -23,8 +23,8 @@ namespace FormulaBuilder.Tests.DependencyResolution
                 _unitTestContainer = _unitTestContainer ?? new Container(
                     c =>
                     {
-                        c.AddRegistry(nhibernateRegistry);
-                        //c.AddRegistry<SqlLiteRegistry>();
+                        //c.AddRegistry(nhibernateRegistry);
+                        c.AddRegistry<SqlLiteRegistry>();
                     });
 
                 var debugStructureMapAssemblyReport = _unitTestContainer.WhatDoIHave();
