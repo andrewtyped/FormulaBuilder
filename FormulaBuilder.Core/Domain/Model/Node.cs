@@ -7,24 +7,43 @@ using System.Threading.Tasks;
 
 namespace FormulaBuilder.Core.Domain.Model
 {
-    public class Node
+    public abstract class Node
     {
         public int Id { get; }
-        public NodeType Type { get; }
         public string Value { get; }
         public int Position { get; }
         public IEnumerable<Node> Children { get; }
 
-        public Node(NodeEntity nodeEntity)
+        protected List<object> _resolvedChildren = new List<object>();
+
+        protected internal Node(NodeEntity nodeEntity)
         {
             if (nodeEntity == null)
                 throw new ArgumentNullException(nameof(nodeEntity));
 
             Id = nodeEntity.Id;
-            Type = NodeType.Create(nodeEntity.Type);
             Value = nodeEntity.Value;
             Position = nodeEntity.Position;
-            Children = nodeEntity.Children.Select(ne => new Node(ne));
+            Children = nodeEntity.Children.Select(ne => Node.Create(ne));
         }
+
+        public static Node Create(NodeEntity nodeEntity)
+        {
+            var nodeType = nodeEntity.Type.Name;
+
+            switch(nodeType)
+            {
+                case "operator":
+                    return new OperationNode(nodeEntity);
+                case "token":
+                    return new ParameterNode(nodeEntity);
+                default:
+                    throw new InvalidOperationException($"Unrecognized node type [{nodeType}].");
+            }
+        }
+
+        public abstract HashSet<string> GatherParameters();
+
+        public abstract object Resolve(Formula formulaContext);
     }
 }

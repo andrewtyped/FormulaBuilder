@@ -37,10 +37,10 @@ namespace FormulaBuilder.Core.Domain
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
 
-            var nodeType = node.Type;
+            var nodeType = (node is OperationNode) ? "operator" : "token";
             FormulaStep step;
 
-            switch(nodeType.Name)
+            switch(nodeType)
             {
                 case "operator":
                     step = OperationStep.Create(node.Value, _currentContext);

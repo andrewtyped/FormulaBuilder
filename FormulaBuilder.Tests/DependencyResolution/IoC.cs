@@ -20,7 +20,7 @@ namespace FormulaBuilder.Tests.DependencyResolution
             lock (_locker)
             {
                 var nhibernateRegistry = new NHibernateRegistry(ConfigurationManager.ConnectionStrings[0].ConnectionString);
-                _unitTestContainer = _unitTestContainer ?? new Container(
+                _unitTestContainer = new Container(
                     c =>
                     {
                         //c.AddRegistry(nhibernateRegistry);

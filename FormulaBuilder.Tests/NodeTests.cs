@@ -12,7 +12,7 @@ namespace FormulaBuilder.Tests
     [TestFixture]
     [Category("unit")]
     [Category("domain model")]
-    class NodeTests
+    class NodeTests : BaseUnitTest
     {
         [Test]
         public void Can_Create_Node()
@@ -28,14 +28,26 @@ namespace FormulaBuilder.Tests
                 "+",
                 0,
                 new List<NodeEntity>() { childEntity });
-            var childNode = new Node(childEntity);
-            var parentNode = new Node(parentEntity);
-            var expectedNodeType = NodeType.Create(parentEntity.Type);
+            var childNode = Node.Create(childEntity);
+            var parentNode = Node.Create(parentEntity);
+            var expectedNodeType = typeof(OperationNode);
 
-            Assert.AreEqual(expectedNodeType, parentNode.Type);
+            Assert.AreEqual(expectedNodeType, parentNode.GetType());
             Assert.AreEqual(parentEntity.Value, parentNode.Value);
             Assert.AreEqual(parentEntity.Position, parentNode.Position);
             Assert.AreEqual(parentEntity.Children.Count(), parentNode.Children.Count());
+        }
+
+        [Test]
+        public void Can_Gather_Parameters()
+        {
+            var tripleSumFormula = GetTripleSumFormula();
+            var parameters = tripleSumFormula.RootNode.GatherParameters();
+            Assert.AreEqual(3, parameters.Count);
+            Assert.That(parameters.Contains("Param1"));
+            Assert.That(parameters.Contains("Param2"));
+            Assert.That(parameters.Contains("Param3"));
+
         }
     }
 }
