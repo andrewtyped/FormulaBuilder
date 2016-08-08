@@ -1,5 +1,6 @@
 ﻿using FormulaBuilder.Core.Domain;
 using FormulaBuilder.Core.Domain.Model;
+using FormulaBuilder.Core.Domain.Model.Nodes;
 using FormulaBuilder.Core.Models;
 using FormulaBuilder.Tests.SqlLite;
 using MiscUtil;
@@ -61,7 +62,7 @@ namespace FormulaBuilder.Tests
             var formula = ExecutableFormulaBuilder.Initialize()
                .WithId(entity.Id)
                .WithName(entity.Name)
-               .WithRootNode(entity.RootNode)
+               .WithRootNode(Node.Create(entity.RootNode))
                .Build<decimal>()
                .WithParameter(ParameterBuilder.Initialize()
                    .WithName("Param1")
@@ -101,7 +102,7 @@ namespace FormulaBuilder.Tests
             var entity = GetGeneralGravityFormulaEntity();
             var formula = BuildGeneralGravityFormula(entity);
 
-            var expectedResult = (6.67408m * .0000000001m * 150000 * 650000.5m) / 450.345m; 
+            var expectedResult = (6.67408m * .0000000001m * 150000 * 650000.5m) / (450.345m * 450.345m); 
             var result = formula.Execute();
             Assert.That(expectedResult == result);
         }
@@ -111,7 +112,7 @@ namespace FormulaBuilder.Tests
             var formula = ExecutableFormulaBuilder.Initialize()
                 .WithId(entity.Id)
                 .WithName(entity.Name)
-                .WithRootNode(entity.RootNode)
+                .WithRootNode(Node.Create(entity.RootNode))
                 .Build<decimal>()
                 .WithParameter(new Parameter<decimal>("G", 6.67408m * .0000000001m))
                 .WithParameter(new Parameter<int>("m1",150000))

@@ -16,6 +16,12 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
 
         }
 
+        internal AdditionNode(NodeDTO nodeDTO)
+            :base(nodeDTO)
+        {
+
+        }
+
         protected override T Aggregate<T>(IEnumerable<T> operands)
         {
             var sum = Operator<T>.Zero;

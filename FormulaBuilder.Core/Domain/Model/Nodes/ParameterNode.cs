@@ -14,6 +14,19 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
         {
         }
 
+        protected internal ParameterNode(NodeDTO nodeDTO) : base(nodeDTO)
+        {
+
+        }
+        protected internal static ParameterNode CreateParameterNode(NodeEntity nodeEntity)
+        {
+            return new ParameterNode(nodeEntity);
+        }
+        protected internal static ParameterNode CreateParameterNode(NodeDTO nodeDTO)
+        {
+            return new ParameterNode(nodeDTO);
+        }
+
         public override HashSet<string> GatherParameters()
         {
             return new HashSet<string>() { this.Value };

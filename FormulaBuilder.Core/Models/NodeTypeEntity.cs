@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FormulaBuilder.Core.Domain.Model.Nodes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,5 +21,25 @@ namespace FormulaBuilder.Core.Models
             Id = id;
             Name = name;
         } 
+
+        internal static NodeTypeEntity Operation = new NodeTypeEntity(1, "operation");
+        internal static NodeTypeEntity Parameter = new NodeTypeEntity(2, "parameter");
+
+        internal static NodeTypeEntity Create(Node node)
+        {
+            if (node == null)
+                throw new ArgumentNullException(nameof(node));
+
+            if (node is OperationNode)
+            {
+                return Operation;
+            }
+            else if (node is ParameterNode)
+            {
+                return Parameter;
+            }
+            else
+                throw new InvalidOperationException();
+        }
     }
 }

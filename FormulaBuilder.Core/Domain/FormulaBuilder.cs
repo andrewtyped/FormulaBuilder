@@ -21,7 +21,7 @@ namespace FormulaBuilder.Core.Domain
 
     public interface IFormulaRootNodeBuilder
     {
-        IFormulaBuilder WithRootNode(NodeEntity nodeEntity);
+        IFormulaBuilder WithRootNode(Node node);
     }
 
     public interface IFormulaBuilder
@@ -38,7 +38,6 @@ namespace FormulaBuilder.Core.Domain
         private int _id;
         private string _name;
         private Node _rootNode;
-        private Type _returnType;
         private ExecutableFormulaBuilder()
         {
         }
@@ -64,12 +63,12 @@ namespace FormulaBuilder.Core.Domain
             return this;
         }
 
-        public IFormulaBuilder WithRootNode(NodeEntity nodeEntity)
+        public IFormulaBuilder WithRootNode(Node node)
         {
-            if (nodeEntity == null)
-                throw new ArgumentNullException(nameof(nodeEntity));
+            if (node == null)
+                throw new ArgumentNullException(nameof(node));
 
-            _rootNode = Node.Create(nodeEntity);
+            _rootNode = node;
             return this;
         }
 

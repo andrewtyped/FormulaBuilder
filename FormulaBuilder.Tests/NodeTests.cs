@@ -19,13 +19,13 @@ namespace FormulaBuilder.Tests
         public void Can_Create_Node()
         {
             var childEntity = new NodeEntity(
-                new NodeTypeEntity(1, "token"), 
+                new NodeTypeEntity(1, "parameter"), 
                 "test", 
                 0,
                 new List<NodeEntity>()
             );
             var parentEntity = new NodeEntity(
-                new NodeTypeEntity(1, "operator"),
+                new NodeTypeEntity(1, "operation"),
                 "+",
                 0,
                 new List<NodeEntity>() { childEntity });

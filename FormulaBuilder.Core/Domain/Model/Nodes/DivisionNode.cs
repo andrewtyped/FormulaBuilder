@@ -16,6 +16,12 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
 
         }
 
+        internal DivisionNode(NodeDTO nodeDTO)
+            :base(nodeDTO)
+        {
+
+        }
+
         protected override T Aggregate<T>(IEnumerable<T> operands)
         {
             var quotient = Operator<T>.Zero;

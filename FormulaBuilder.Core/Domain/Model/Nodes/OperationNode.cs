@@ -11,21 +11,39 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
 {
     public abstract class OperationNode : Node
     {
-        private static Dictionary<string, Func<NodeEntity, OperationNode>> _operationRegistry =
-            new Dictionary<string, Func<NodeEntity, OperationNode>>()
+        private static Dictionary<string, Func<NodeDTO, OperationNode>> _operationRegistry =
+            new Dictionary<string, Func<NodeDTO, OperationNode>>()
             {
-                {"+", (ne) => new AdditionNode(ne) },
-                {"-", (ne) => new SubtractionNode(ne) },
-                {"*", (ne) => new MultiplicationNode(ne) },
-                {"/", (ne) => new DivisionNode(ne) }
+                {"+", (nd) => new AdditionNode(nd) },
+                {"-", (nd) => new SubtractionNode(nd) },
+                {"*", (nd) => new MultiplicationNode(nd) },
+                {"/", (nd) => new DivisionNode(nd) }
             };
         protected internal OperationNode(NodeEntity nodeEntity) : base(nodeEntity)
         {
         }
 
-        public static OperationNode CreateOperation(NodeEntity nodeEntity)
+        public OperationNode(NodeDTO nodeDTO)
+            :base(nodeDTO)
         {
-            return _operationRegistry[nodeEntity.Value](nodeEntity);
+
+        }
+
+        internal static OperationNode CreateOperation(NodeEntity nodeEntity)
+        {
+            var nodeDTO = new NodeDTO(
+                nodeEntity.Id,
+                nodeEntity.Value,
+                nodeEntity.Position,
+                nodeEntity.Children.Select(ne => Node.Create(ne)),
+                NodeType.OPERATOR);
+
+            return _operationRegistry[nodeEntity.Value](nodeDTO);
+        }
+
+        public static OperationNode CreateOperation(NodeDTO nodeDTO)
+        {
+            return _operationRegistry[nodeDTO.Value](nodeDTO);
         }
 
         public static void AddCustomOperation(OperationNode node)

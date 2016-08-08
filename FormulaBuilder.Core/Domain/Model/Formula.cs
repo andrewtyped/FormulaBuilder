@@ -15,7 +15,7 @@ namespace FormulaBuilder.Core.Domain.Model
         public string Name { get; }
         public Node RootNode { get; }
 
-        public Formula(FormulaEntity formulaEntity)
+        protected internal Formula(FormulaEntity formulaEntity)
         {
             if (formulaEntity == null)
                 throw new ArgumentNullException(nameof(formulaEntity));
@@ -25,7 +25,7 @@ namespace FormulaBuilder.Core.Domain.Model
             RootNode = Node.Create(formulaEntity.RootNode);
         }
 
-        protected Formula(int id, string name, Node rootNode)
+        protected internal Formula(int id, string name, Node rootNode)
         {
             Id = id;
             Name = name;

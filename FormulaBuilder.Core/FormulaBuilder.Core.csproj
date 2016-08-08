@@ -77,11 +77,14 @@
     <Compile Include="DependencyResolution\LoggingRegistry.cs" />
     <Compile Include="DependencyResolution\NHibernateRegistry.cs" />
     <Compile Include="Domain\FormulaBuilder.cs" />
+    <Compile Include="Domain\FormulaRepository.cs" />
     <Compile Include="Domain\Model\ExecutableFormula.cs" />
     <Compile Include="Domain\Model\Formula.cs" />
     <Compile Include="Domain\Model\Nodes\DivisionNode.cs" />
     <Compile Include="Domain\Model\Nodes\MultiplicationNode.cs" />
     <Compile Include="Domain\Model\Nodes\Node.cs" />
+    <Compile Include="Domain\Model\Nodes\NodeDTO.cs" />
+    <Compile Include="Domain\Model\Nodes\NodeType.cs" />
     <Compile Include="Domain\Model\Nodes\OperationNode.cs" />
     <Compile Include="Domain\Model\Nodes\SubtractionNode.cs" />
     <Compile Include="Domain\Model\Nodes\AdditionNode.cs" />

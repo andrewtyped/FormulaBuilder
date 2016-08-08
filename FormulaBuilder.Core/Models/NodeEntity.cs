@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FormulaBuilder.Core.Domain.Model.Nodes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,6 +39,23 @@ namespace FormulaBuilder.Core.Models
             Children = children;
 
             foreach (var child in children)
+            {
+                child.Parent = this;
+            }
+        }
+
+        internal NodeEntity(Node node)
+        {
+            if (node == null)
+                throw new ArgumentNullException(nameof(node));
+
+            Id = node.Id;
+            Type = NodeTypeEntity.Create(node);
+            Value = node.Value;
+            Position = node.Position;
+            Children = node.Children.Select(n => new NodeEntity(n)).ToList();
+
+            foreach(var child in Children)
             {
                 child.Parent = this;
             }

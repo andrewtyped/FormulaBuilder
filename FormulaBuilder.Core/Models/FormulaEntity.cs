@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FormulaBuilder.Core.Domain.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,16 @@ namespace FormulaBuilder.Core.Models
 
             Name = name;
             RootNode = rootNode;
+        }
+
+        public FormulaEntity(Formula formula)
+        {
+            if (formula == null)
+                throw new ArgumentNullException(nameof(formula));
+
+            Id = formula.Id;
+            Name = formula.Name;
+            RootNode = new NodeEntity(formula.RootNode);
         }
     }
 }
