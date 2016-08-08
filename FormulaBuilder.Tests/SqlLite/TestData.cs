@@ -24,6 +24,10 @@ namespace FormulaBuilder.Tests.SqlLite
                 SaveNode(tripleSumFormula.RootNode, session);
                 session.SaveOrUpdate(tripleSumFormula);
 
+                var generalGravityFormula = CreateGeneralGravityFormula();
+                SaveNode(generalGravityFormula.RootNode, session);
+                session.SaveOrUpdate(generalGravityFormula);
+
                 tx.Commit();
             }
 
@@ -58,6 +62,42 @@ namespace FormulaBuilder.Tests.SqlLite
             });
 
             return topPlusNode;
+        }
+
+        public static FormulaEntity CreateGeneralGravityFormula()
+        {
+            var rootNode = CreateGeneralGravityNodes();
+            var formula = new FormulaEntity("General Gravity", rootNode);
+            return formula;
+        }
+
+        public static NodeEntity CreateGeneralGravityNodes()
+        {
+            var noChildren = new List<NodeEntity>();
+            var GravityConstant = new NodeEntity(TOKEN, "G", 0, noChildren);
+            var mass1 = new NodeEntity(TOKEN, "m1", 1, noChildren);
+            var mass2 = new NodeEntity(TOKEN, "m2", 2, noChildren);
+            var distance = new NodeEntity(TOKEN, "d", 0, noChildren);
+
+            var dividend = new NodeEntity(OPERATOR, "*", 0, new List<NodeEntity>()
+            {
+                GravityConstant,
+                mass1,
+                mass2
+            });
+            var divisor = new NodeEntity(OPERATOR, "*", 1, new List<NodeEntity>()
+            {
+                distance,
+                distance
+            });
+
+            var quotient = new NodeEntity(OPERATOR, "/", 0, new List<NodeEntity>()
+            {
+                dividend,
+                divisor
+            });
+
+            return quotient;
         }
 
         private static void SaveNode(NodeEntity node, ISession session)

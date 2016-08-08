@@ -1,4 +1,5 @@
 ﻿using FormulaBuilder.Core.Domain.Model;
+using FormulaBuilder.Core.Domain.Model.Nodes;
 using FormulaBuilder.Core.Models;
 using NUnit.Framework;
 using System;
@@ -30,7 +31,7 @@ namespace FormulaBuilder.Tests
                 new List<NodeEntity>() { childEntity });
             var childNode = Node.Create(childEntity);
             var parentNode = Node.Create(parentEntity);
-            var expectedNodeType = typeof(OperationNode);
+            var expectedNodeType = typeof(AdditionNode);
 
             Assert.AreEqual(expectedNodeType, parentNode.GetType());
             Assert.AreEqual(parentEntity.Value, parentNode.Value);

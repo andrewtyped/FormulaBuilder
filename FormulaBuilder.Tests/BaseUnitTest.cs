@@ -57,6 +57,19 @@ namespace FormulaBuilder.Tests
             return new Formula(tripleSumFormulaEntity);
         }
 
+        protected FormulaEntity GetGeneralGravityFormulaEntity()
+        {
+            var entity = _session.Query<FormulaEntity>()
+                .Single(f => f.Name == "General Gravity");
+
+            return entity;
+        }
+
+        protected Formula GetGeneralGravityFormula()
+        {
+            var entity = GetGeneralGravityFormulaEntity();
+            return new Formula(entity);
+        }
 
         [TearDown]
         public void TearDown()

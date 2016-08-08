@@ -76,19 +76,18 @@
   <ItemGroup>
     <Compile Include="DependencyResolution\LoggingRegistry.cs" />
     <Compile Include="DependencyResolution\NHibernateRegistry.cs" />
-    <Compile Include="Domain\ExecutableFormula.cs" />
-    <Compile Include="Domain\ExecutableFormulaBuilder.cs" />
     <Compile Include="Domain\FormulaBuilder.cs" />
-    <Compile Include="Domain\FormulaParser.cs" />
-    <Compile Include="Domain\FormulaStep.cs" />
+    <Compile Include="Domain\Model\ExecutableFormula.cs" />
     <Compile Include="Domain\Model\Formula.cs" />
-    <Compile Include="Domain\Model\Node.cs" />
-    <Compile Include="Domain\Model\OperationNode.cs" />
+    <Compile Include="Domain\Model\Nodes\DivisionNode.cs" />
+    <Compile Include="Domain\Model\Nodes\MultiplicationNode.cs" />
+    <Compile Include="Domain\Model\Nodes\Node.cs" />
+    <Compile Include="Domain\Model\Nodes\OperationNode.cs" />
+    <Compile Include="Domain\Model\Nodes\SubtractionNode.cs" />
+    <Compile Include="Domain\Model\Nodes\AdditionNode.cs" />
     <Compile Include="Domain\Model\Parameter.cs" />
-    <Compile Include="Domain\Model\ParameterNode.cs" />
-    <Compile Include="Domain\OperationStep.cs" />
+    <Compile Include="Domain\Model\Nodes\ParameterNode.cs" />
     <Compile Include="Domain\ParameterBuilder.cs" />
-    <Compile Include="Domain\TokenStep.cs" />
     <Compile Include="Logging\ILoggingService.cs" />
     <Compile Include="Logging\LoggingService.cs" />
     <Compile Include="Models\FormulaEntity.cs" />
