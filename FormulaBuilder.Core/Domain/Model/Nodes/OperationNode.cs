@@ -56,13 +56,13 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
             _operationRegistry.Add(node.Value, (ne) => node);
         }
 
-        public override HashSet<string> GatherParameters()
+        public override HashSet<string> GatherParameters(Formula formulaContext)
         {
             var parameters = new HashSet<string>();
 
             foreach(var child in Children)
             {
-                parameters.UnionWith(child.GatherParameters());
+                parameters.UnionWith(child.GatherParameters(formulaContext));
             }
 
             return parameters;

@@ -21,7 +21,15 @@ namespace FormulaBuilder.Core.Domain
 
     public interface IFormulaRootNodeBuilder
     {
-        IFormulaBuilder WithRootNode(Node node);
+        INodeTypeBuilder WithRootNode();
+    }
+
+    public interface IFormulaPartsBuilder
+    {
+        IFormulaIdBuilder WithNestedFormula();
+        IFormulaPartsBuilder EndNestedFormula();
+        IFormulaBuilder EndNestedFormulas();
+        ExecutableFormula<T> Build<T>();
     }
 
     public interface IFormulaBuilder
@@ -33,18 +41,32 @@ namespace FormulaBuilder.Core.Domain
         IFormulaIdBuilder,
         IFormulaNameBuilder,
         IFormulaRootNodeBuilder,
+        IFormulaPartsBuilder,
         IFormulaBuilder
     {
         private int _id;
         private string _name;
-        private Node _rootNode;
-        private ExecutableFormulaBuilder()
+        private NodeBuilder _rootNodeBuilder;
+        private ExecutableFormulaBuilder _parentFormulaBuilder;
+        private List<IFormulaBuilder> _nestedFormulaBuilders;
+        private ExecutableFormulaBuilder(ExecutableFormulaBuilder parentFormulaBuilder)
         {
+            _parentFormulaBuilder = parentFormulaBuilder;
+            _nestedFormulaBuilders = new List<IFormulaBuilder>();
         }
 
         public static IFormulaIdBuilder Initialize()
+        { 
+            return new ExecutableFormulaBuilder(null);
+        }
+
+        private static ExecutableFormulaBuilder Initialize(ExecutableFormulaBuilder parentFormulaBuilder)
         {
-            return new ExecutableFormulaBuilder();
+            if (parentFormulaBuilder == null)
+                throw new ArgumentNullException(nameof(parentFormulaBuilder));
+
+            var formulaBuilder = new ExecutableFormulaBuilder(parentFormulaBuilder);
+            return formulaBuilder;
         }
 
         public IFormulaNameBuilder WithId(int id)
@@ -63,18 +85,35 @@ namespace FormulaBuilder.Core.Domain
             return this;
         }
 
-        public IFormulaBuilder WithRootNode(Node node)
+        public IFormulaIdBuilder WithNestedFormula()
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            var nestedFormulaBuilder = Initialize(this);
+            _nestedFormulaBuilders.Add(nestedFormulaBuilder as IFormulaBuilder);
 
-            _rootNode = node;
+            return nestedFormulaBuilder;
+        }
+
+        public IFormulaPartsBuilder EndNestedFormula()
+        {
+            return _parentFormulaBuilder ?? this;
+        }
+        public IFormulaBuilder EndNestedFormulas()
+        {
+            if (_parentFormulaBuilder != null)
+                throw new InvalidOperationException("A parent formula exists. Cannot end nested formula construction while parent formulas exist");
+
             return this;
+        }
+        public INodeTypeBuilder WithRootNode()
+        {
+            _rootNodeBuilder = NodeBuilder.Initialize(this) as NodeBuilder;
+            return _rootNodeBuilder;
         }
 
         public ExecutableFormula<T> Build<T>()
         {
-            return new ExecutableFormula<T>(_id, _name, _rootNode);
+            var nestedFormulas = _nestedFormulaBuilders.Select(formula => formula.Build<T>());
+            return new ExecutableFormula<T>(_id, _name, _rootNodeBuilder.Build(), nestedFormulas);
         }
     }
 }

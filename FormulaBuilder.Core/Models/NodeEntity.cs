@@ -1,4 +1,5 @@
-﻿using FormulaBuilder.Core.Domain.Model.Nodes;
+﻿using FormulaBuilder.Core.Domain.Model;
+using FormulaBuilder.Core.Domain.Model.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace FormulaBuilder.Core.Models
     public class NodeEntity
     {
         public virtual int Id { get; protected internal set; }
+        public virtual FormulaEntity FormulaReference { get; protected internal set; }
         public virtual NodeTypeEntity Type { get; protected internal set; }
 
         public virtual string Value { get; protected internal set; }
@@ -25,6 +27,16 @@ namespace FormulaBuilder.Core.Models
         }
 
         public NodeEntity(NodeTypeEntity type, string value, int position, IList<NodeEntity> children)
+            :this(null, type, value, position, children)
+        {
+        }
+
+        public NodeEntity(NodeTypeEntity type, string value, int position, FormulaEntity formulaReference)
+            :this(formulaReference,type,value,position,new List<NodeEntity>())
+        {
+        }
+
+        private NodeEntity(FormulaEntity formulaReference, NodeTypeEntity type, string value, int position, IList<NodeEntity> children)
         {
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
@@ -33,6 +45,7 @@ namespace FormulaBuilder.Core.Models
             if (children == null)
                 throw new ArgumentNullException(nameof(children));
 
+            FormulaReference = formulaReference;
             Type = type;
             Value = value;
             Position = position;
@@ -44,7 +57,8 @@ namespace FormulaBuilder.Core.Models
             }
         }
 
-        internal NodeEntity(Node node)
+
+        internal NodeEntity(Formula formula, Node node)
         {
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
@@ -53,7 +67,12 @@ namespace FormulaBuilder.Core.Models
             Type = NodeTypeEntity.Create(node);
             Value = node.Value;
             Position = node.Position;
-            Children = node.Children.Select(n => new NodeEntity(n)).ToList();
+            Children = node.Children.Select(n => new NodeEntity(formula, n)).ToList();
+
+            Formula referencedFormula;
+
+            if (formula.NestedFormulas.TryGetValue(node.Value, out referencedFormula))
+                FormulaReference = new FormulaEntity(referencedFormula);
 
             foreach(var child in Children)
             {

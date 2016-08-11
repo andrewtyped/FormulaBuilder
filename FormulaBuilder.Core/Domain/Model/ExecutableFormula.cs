@@ -21,17 +21,16 @@ namespace FormulaBuilder.Core.Domain.Model
 
     public class ExecutableFormula<T> : Formula, IParameterSetter<T>, IExecutable<T>
     {
-        public HashSet<string> RequiredParameters { get; }
         private readonly Dictionary<string, Parameter> _parameters = new Dictionary<string, Parameter>();
         public IReadOnlyDictionary<string, Parameter> Parameters { get { return _parameters; } }
 
         internal ExecutableFormula(
            int id,
            string name,
-           Node rootNode)
-            : base(id, name, rootNode)
+           Node rootNode,
+           IEnumerable<Formula> nestedFormulas)
+            : base(id, name, rootNode, nestedFormulas)
         {
-            RequiredParameters = RootNode.GatherParameters();
         }
 
         public IParameterSetter<T> WithParameter(Parameter parameter)

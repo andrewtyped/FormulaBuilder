@@ -37,14 +37,14 @@ namespace FormulaBuilder.Tests
             var entity = GetTripleSumFormulaEntity();
             var formula = BuildTripleSumFormula(entity);
 
-            Assert.AreEqual(entity.Id, formula.Id);
-            Assert.AreEqual(entity.Name, formula.Name);
-            Assert.AreEqual(entity.RootNode.Id, formula.RootNode.Id);
-            Assert.AreEqual(entity.RootNode.Children.Count, formula.RootNode.Children.Count());
+            Assert.AreEqual(entity.Id, formula.Id, "Id");
+            Assert.AreEqual(entity.Name, formula.Name, "Name");
+            Assert.AreEqual(entity.RootNode.Id, formula.RootNode.Id, "Root Node Id");
+            Assert.AreEqual(entity.RootNode.Children.Count, formula.RootNode.Children.Count(), "Child Node Count");
             Assert.AreEqual(3, formula.Parameters.Count);
-            Assert.That(formula.Parameters.ContainsKey("Param1"));
-            Assert.That(formula.Parameters.ContainsKey("Param2"));
-            Assert.That(formula.Parameters.ContainsKey("Param3"));
+            Assert.That(formula.Parameters.ContainsKey("Param1"), "Param1");
+            Assert.That(formula.Parameters.ContainsKey("Param2"), "Param2");
+            Assert.That(formula.Parameters.ContainsKey("Param3"), "Param3");
         }
 
         [Test]
@@ -62,7 +62,23 @@ namespace FormulaBuilder.Tests
             var formula = ExecutableFormulaBuilder.Initialize()
                .WithId(entity.Id)
                .WithName(entity.Name)
-               .WithRootNode(Node.Create(entity.RootNode))
+               .WithRootNode()
+                    .Operation("+")
+                    .WithId(entity.RootNode.Id)
+                    .WithChild()
+                        .Operation("+")
+                        .WithChild()
+                            .Parameter("Param1")
+                        .EndNode()
+                        .WithChild()
+                            .Parameter("Param2")
+                        .EndNode()
+                    .EndNode()
+                    .WithChild()
+                        .Parameter("Param3")
+                    .EndNode()
+                .EndNode()
+               .EndNodes()
                .Build<decimal>()
                .WithParameter(ParameterBuilder.Initialize()
                    .WithName("Param1")
@@ -110,9 +126,32 @@ namespace FormulaBuilder.Tests
         private ExecutableFormula<decimal> BuildGeneralGravityFormula(FormulaEntity entity)
         {
             var formula = ExecutableFormulaBuilder.Initialize()
-                .WithId(entity.Id)
-                .WithName(entity.Name)
-                .WithRootNode(Node.Create(entity.RootNode))
+                .WithId(0)
+                .WithName("General Gravitational Force")
+                .WithRootNode()
+                    .Operation("/")
+                    .WithChild()
+                        .Operation("*")
+                        .WithChild()
+                            .Parameter("G")
+                        .EndNode()
+                        .WithChild()
+                            .Parameter("m1")
+                        .EndNode()
+                        .WithChild()
+                            .Parameter("m2")
+                        .EndNode()
+                    .EndNode()
+                    .WithChild()
+                        .Operation("*")
+                        .WithChild()
+                            .Parameter("d")
+                        .EndNode()
+                        .WithChild()
+                            .Parameter("d")
+                        .EndNode()
+                    .EndNode()
+                .EndNodes()                        
                 .Build<decimal>()
                 .WithParameter(new Parameter<decimal>("G", 6.67408m * .0000000001m))
                 .WithParameter(new Parameter<int>("m1",150000))
@@ -122,6 +161,47 @@ namespace FormulaBuilder.Tests
                 as ExecutableFormula<decimal>;
 
             return formula;
+        }
+
+        [Test]
+        public void Build_Crazy_Nested_Formula()
+        {
+            var formula = ExecutableFormulaBuilder.Initialize()
+                .WithId(0)
+                .WithName("Crazy")
+                .WithRootNode()
+                    .Operation("*")
+                    .WithChild()
+                        .NestedFormula("F")
+                    .EndNode()
+                    .WithChild()
+                        .Parameter("Param1")
+                    .EndNode()
+                .EndNode()
+                .EndNodes()
+                .WithNestedFormula()
+                    .WithId(0)
+                    .WithName("F")
+                    .WithRootNode()
+                        .Operation("*")
+                        .WithChild()
+                            .Parameter("m")
+                        .EndNode()
+                        .WithChild()
+                            .Parameter("a")
+                        .EndNode()
+                    .EndNode()
+                    .EndNodes()
+                .EndNestedFormula()
+                .EndNestedFormulas()
+                .Build<decimal>()
+                .WithParameter(new Parameter<decimal>("Param1", 10.00m))
+                .WithParameter(new Parameter<decimal>("m", 20.00m))
+                .WithParameter(new Parameter<decimal>("a", 30.00m))
+                .AndNoMoreParameters();
+
+            var result = formula.Execute();
+            Assert.That(result == 6000.00m);
         }
     }
 }

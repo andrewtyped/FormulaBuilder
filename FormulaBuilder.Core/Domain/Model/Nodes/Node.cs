@@ -47,6 +47,8 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
                     return OperationNode.CreateOperation(nodeEntity);
                 case "parameter":
                     return ParameterNode.CreateParameterNode(nodeEntity);
+                case "formula":
+                    return FormulaNode.CreateFormulaNode(nodeEntity);
                 default:
                     throw new InvalidOperationException($"Unrecognized node type [{nodeType}].");
             }
@@ -63,6 +65,8 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
                     return OperationNode.CreateOperation(nodeDTO);
                 case NodeType.PARAMETER:
                     return ParameterNode.CreateParameterNode(nodeDTO);
+                case NodeType.FORMULA:
+                    return FormulaNode.CreateFormulaNode(nodeDTO);
                 default:
                     throw new InvalidOperationException($"Unrecognized node type [{nodeDTO.NodeType.ToString()}].");
             }
@@ -74,7 +78,7 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
             return Create(nodeDTO);
         }
 
-        public abstract HashSet<string> GatherParameters();
+        public abstract HashSet<string> GatherParameters(Formula formulaContext);
 
         public abstract T Resolve<T>(ExecutableFormula<T> formulaContext);
     }

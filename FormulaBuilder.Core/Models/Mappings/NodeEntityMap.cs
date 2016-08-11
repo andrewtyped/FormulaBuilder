@@ -14,6 +14,10 @@ namespace FormulaBuilder.Core.Models.Mappings
             Schema("fb");
             Table("Node");
             Id(x => x.Id).GeneratedBy.Identity();
+            References(x => x.FormulaReference)
+                .Cascade.None()
+                .Nullable()
+                .Column("FormulaReferenceId");
             References(x => x.Type)
                 .Cascade.SaveUpdate()
                 .Not.Nullable()
@@ -30,8 +34,8 @@ namespace FormulaBuilder.Core.Models.Mappings
                 .KeyColumn("ParentNodeId")
                 .Fetch.Subselect()
                 .LazyLoad()
-                .Cascade.None();
-            //.OrderBy(nameof(NodeEntity.Position));
+                .Cascade.None()
+                .OrderBy(nameof(NodeEntity.Position));
         }
     }
 }

@@ -27,7 +27,7 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
             return new ParameterNode(nodeDTO);
         }
 
-        public override HashSet<string> GatherParameters()
+        public override HashSet<string> GatherParameters(Formula formulaContext)
         {
             return new HashSet<string>() { this.Value };
         }

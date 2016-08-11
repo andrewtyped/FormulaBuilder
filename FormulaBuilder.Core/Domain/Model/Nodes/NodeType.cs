@@ -8,7 +8,9 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
 {
     public enum NodeType
     {
+        EMPTY = -1,
         OPERATOR,
-        PARAMETER
+        PARAMETER,
+        FORMULA
     }
 }

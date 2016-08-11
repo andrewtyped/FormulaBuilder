@@ -43,7 +43,7 @@ namespace FormulaBuilder.Tests
         public void Can_Gather_Parameters()
         {
             var tripleSumFormula = GetTripleSumFormula();
-            var parameters = tripleSumFormula.RootNode.GatherParameters();
+            var parameters = tripleSumFormula.RootNode.GatherParameters(tripleSumFormula);
             Assert.AreEqual(3, parameters.Count);
             Assert.That(parameters.Contains("Param1"));
             Assert.That(parameters.Contains("Param2"));

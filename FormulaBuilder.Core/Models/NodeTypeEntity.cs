@@ -24,6 +24,7 @@ namespace FormulaBuilder.Core.Models
 
         internal static NodeTypeEntity Operation = new NodeTypeEntity(1, "operation");
         internal static NodeTypeEntity Parameter = new NodeTypeEntity(2, "parameter");
+        internal static NodeTypeEntity Formula = new NodeTypeEntity(3, "formula");
 
         internal static NodeTypeEntity Create(Node node)
         {

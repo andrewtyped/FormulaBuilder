@@ -35,7 +35,7 @@ namespace FormulaBuilder.Core.Models
 
             Id = formula.Id;
             Name = formula.Name;
-            RootNode = new NodeEntity(formula.RootNode);
+            RootNode = new NodeEntity(formula, formula.RootNode);
         }
     }
 }
