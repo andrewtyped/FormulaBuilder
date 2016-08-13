@@ -80,6 +80,6 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
 
         public abstract HashSet<string> GatherParameters(Formula formulaContext);
 
-        public abstract T Resolve<T>(ExecutableFormula<T> formulaContext);
+        public abstract T Resolve<T>(Executable<T> formulaContext);
     }
 }

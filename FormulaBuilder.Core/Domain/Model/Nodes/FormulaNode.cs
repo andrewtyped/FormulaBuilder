@@ -35,15 +35,15 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
             return nestedFormula.RootNode.GatherParameters(formulaContext);
         }
 
-        public override T Resolve<T>(ExecutableFormula<T> formulaContext)
+        public override T Resolve<T>(Executable<T> executionContext)
         {
             T result;
 
-            if (!formulaContext.NestedFormulaResults.TryGetValue(Value, out result))
+            if (!executionContext.NestedFormulaResults.TryGetValue(Value, out result))
             {
-                var nestedFormula = formulaContext.NestedFormulas[Value];
-                result = nestedFormula.RootNode.Resolve(formulaContext);
-                formulaContext.AddNestedFormulaResult(Value, result);
+                var nestedFormula = executionContext.Formula.NestedFormulas[Value];
+                result = nestedFormula.RootNode.Resolve(executionContext);
+                executionContext.AddNestedFormulaResult(Value, result);
             }
 
             return result;

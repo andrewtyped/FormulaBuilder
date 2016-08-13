@@ -76,9 +76,10 @@
   <ItemGroup>
     <Compile Include="DependencyResolution\LoggingRegistry.cs" />
     <Compile Include="DependencyResolution\NHibernateRegistry.cs" />
+    <Compile Include="Domain\ExecutableFormulaBuilder.cs" />
     <Compile Include="Domain\FormulaBuilder.cs" />
     <Compile Include="Domain\FormulaRepository.cs" />
-    <Compile Include="Domain\Model\ExecutableFormula.cs" />
+    <Compile Include="Domain\Model\Executable.cs" />
     <Compile Include="Domain\Model\Formula.cs" />
     <Compile Include="Domain\Model\Nodes\DivisionNode.cs" />
     <Compile Include="Domain\Model\Nodes\FormulaNode.cs" />

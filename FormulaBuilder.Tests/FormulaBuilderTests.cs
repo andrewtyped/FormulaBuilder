@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static FormulaBuilder.Core.Domain.ExecutableFormulaBuilder;
 
 namespace FormulaBuilder.Tests
 {
@@ -41,10 +42,10 @@ namespace FormulaBuilder.Tests
             Assert.AreEqual(entity.Name, formula.Name, "Name");
             Assert.AreEqual(entity.RootNode.Id, formula.RootNode.Id, "Root Node Id");
             Assert.AreEqual(entity.RootNode.Children.Count, formula.RootNode.Children.Count(), "Child Node Count");
-            Assert.AreEqual(3, formula.Parameters.Count);
-            Assert.That(formula.Parameters.ContainsKey("Param1"), "Param1");
-            Assert.That(formula.Parameters.ContainsKey("Param2"), "Param2");
-            Assert.That(formula.Parameters.ContainsKey("Param3"), "Param3");
+            Assert.AreEqual(3, formula.RequiredParameters.Count);
+            Assert.That(formula.RequiredParameters.Contains("Param1"), "Param1");
+            Assert.That(formula.RequiredParameters.Contains("Param2"), "Param2");
+            Assert.That(formula.RequiredParameters.Contains("Param3"), "Param3");
         }
 
         [Test]
@@ -53,13 +54,31 @@ namespace FormulaBuilder.Tests
             var entity = GetTripleSumFormulaEntity();
             var formula = BuildTripleSumFormula(entity);
 
-            var result = formula.Execute();
+            var executable = Executable()
+                .Formula(formula)
+                .Returns<decimal>()
+                .WithParameter(ParameterBuilder.Initialize()
+                   .WithName("Param1")
+                   .WithValue(10.00m)
+                   .Build())
+               .WithParameter(ParameterBuilder.Initialize()
+                   .WithName("Param2")
+                   .WithValue(20.00f)
+                   .Build())
+               .WithParameter(ParameterBuilder.Initialize()
+                   .WithName("Param3")
+                   .WithValue(30.00m)
+                   .Build())
+               .AndNoMoreParameters()
+               .Build<decimal>();
+
+            var result = executable.Execute();
             Assert.AreEqual(60.00m, result);
         }
 
-        private ExecutableFormula<decimal> BuildTripleSumFormula(FormulaEntity entity)
+        private Formula BuildTripleSumFormula(FormulaEntity entity)
         {
-            var formula = ExecutableFormulaBuilder.Initialize()
+            var formula = Core.Domain.FormulaBuilder.Initialize()
                .WithId(entity.Id)
                .WithName(entity.Name)
                .WithRootNode()
@@ -79,21 +98,8 @@ namespace FormulaBuilder.Tests
                     .EndNode()
                 .EndNode()
                .EndNodes()
-               .Build<decimal>()
-               .WithParameter(ParameterBuilder.Initialize()
-                   .WithName("Param1")
-                   .WithValue(10.00m)
-                   .Build())
-               .WithParameter(ParameterBuilder.Initialize()
-                   .WithName("Param2")
-                   .WithValue(20.00f)
-                   .Build())
-               .WithParameter(ParameterBuilder.Initialize()
-                   .WithName("Param3")
-                   .WithValue(30.00m)
-                   .Build())
-               .AndNoMoreParameters()
-               as ExecutableFormula<decimal>;
+               .Build();
+
 
             return formula;
         }
@@ -105,11 +111,11 @@ namespace FormulaBuilder.Tests
             var formula = BuildGeneralGravityFormula(entity);
 
             Assert.AreEqual(entity.RootNode.Children.Count, formula.RootNode.Children.Count());
-            Assert.AreEqual(4, formula.Parameters.Count);
-            Assert.That(formula.Parameters.ContainsKey("G"));
-            Assert.That(formula.Parameters.ContainsKey("m1"));
-            Assert.That(formula.Parameters.ContainsKey("m2"));
-            Assert.That(formula.Parameters.ContainsKey("d"));
+            Assert.AreEqual(4, formula.RequiredParameters.Count);
+            Assert.That(formula.RequiredParameters.Contains("G"));
+            Assert.That(formula.RequiredParameters.Contains("m1"));
+            Assert.That(formula.RequiredParameters.Contains("m2"));
+            Assert.That(formula.RequiredParameters.Contains("d"));
         }
 
         [Test]
@@ -118,14 +124,24 @@ namespace FormulaBuilder.Tests
             var entity = GetGeneralGravityFormulaEntity();
             var formula = BuildGeneralGravityFormula(entity);
 
+            var executable = Executable()
+                .Formula(formula)
+                .Returns<decimal>()
+                .WithParameter(new Parameter<decimal>("G", 6.67408m * .0000000001m))
+                .WithParameter(new Parameter<int>("m1", 150000))
+                .WithParameter(new Parameter<decimal>("m2", 650000.5m))
+                .WithParameter(new Parameter<decimal>("d", 450.345m))
+                .AndNoMoreParameters()
+                .Build<decimal>();
+
             var expectedResult = (6.67408m * .0000000001m * 150000 * 650000.5m) / (450.345m * 450.345m); 
-            var result = formula.Execute();
+            var result = executable.Execute();
             Assert.That(expectedResult == result);
         }
 
-        private ExecutableFormula<decimal> BuildGeneralGravityFormula(FormulaEntity entity)
+        private Formula BuildGeneralGravityFormula(FormulaEntity entity)
         {
-            var formula = ExecutableFormulaBuilder.Initialize()
+            var formula = Core.Domain.FormulaBuilder.Initialize()
                 .WithId(0)
                 .WithName("General Gravitational Force")
                 .WithRootNode()
@@ -151,14 +167,8 @@ namespace FormulaBuilder.Tests
                             .Parameter("d")
                         .EndNode()
                     .EndNode()
-                .EndNodes()                        
-                .Build<decimal>()
-                .WithParameter(new Parameter<decimal>("G", 6.67408m * .0000000001m))
-                .WithParameter(new Parameter<int>("m1",150000))
-                .WithParameter(new Parameter<decimal>("m2",650000.5m))
-                .WithParameter(new Parameter<decimal>("d",450.345m))
-                .AndNoMoreParameters()
-                as ExecutableFormula<decimal>;
+                .EndNodes()
+                .Build();
 
             return formula;
         }
@@ -166,7 +176,7 @@ namespace FormulaBuilder.Tests
         [Test]
         public void Build_Crazy_Nested_Formula()
         {
-            var formula = ExecutableFormulaBuilder.Initialize()
+            var formula = Core.Domain.FormulaBuilder.Initialize()
                 .WithId(0)
                 .WithName("Crazy")
                 .WithRootNode()
@@ -194,13 +204,18 @@ namespace FormulaBuilder.Tests
                     .EndNodes()
                 .EndNestedFormula()
                 .EndNestedFormulas()
-                .Build<decimal>()
+                .Build();
+
+            var executable = Executable()
+                .Formula(formula)
+                .Returns<decimal>()
                 .WithParameter(new Parameter<decimal>("Param1", 10.00m))
                 .WithParameter(new Parameter<decimal>("m", 20.00m))
                 .WithParameter(new Parameter<decimal>("a", 30.00m))
-                .AndNoMoreParameters();
+                .AndNoMoreParameters()
+                .Build<decimal>();
 
-            var result = formula.Execute();
+            var result = executable.Execute();
             Assert.That(result == 6000.00m);
         }
     }

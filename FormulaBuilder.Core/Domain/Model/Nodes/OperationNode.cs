@@ -68,14 +68,14 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
             return parameters;
         }
 
-        public override T Resolve<T>(ExecutableFormula<T> formulaContext)
+        public override T Resolve<T>(Executable<T> formulaContext)
         {
             var resolvedChildren = ResolveChildren(formulaContext);
             var result = Aggregate(resolvedChildren);
             return result;
         }
 
-        private IEnumerable<T> ResolveChildren<T>(ExecutableFormula<T> formula)
+        private IEnumerable<T> ResolveChildren<T>(Executable<T> formula)
         {
             var resolvedChildren = new List<T>();
 

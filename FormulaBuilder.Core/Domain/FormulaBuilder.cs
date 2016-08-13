@@ -29,15 +29,15 @@ namespace FormulaBuilder.Core.Domain
         IFormulaIdBuilder WithNestedFormula();
         IFormulaPartsBuilder EndNestedFormula();
         IFormulaBuilder EndNestedFormulas();
-        ExecutableFormula<T> Build<T>();
+        Formula Build();
     }
 
     public interface IFormulaBuilder
     {
-        ExecutableFormula<T> Build<T>();
+        Formula Build();
     }
 
-    public class ExecutableFormulaBuilder :
+    public class FormulaBuilder :
         IFormulaIdBuilder,
         IFormulaNameBuilder,
         IFormulaRootNodeBuilder,
@@ -47,9 +47,9 @@ namespace FormulaBuilder.Core.Domain
         private int _id;
         private string _name;
         private NodeBuilder _rootNodeBuilder;
-        private ExecutableFormulaBuilder _parentFormulaBuilder;
+        private FormulaBuilder _parentFormulaBuilder;
         private List<IFormulaBuilder> _nestedFormulaBuilders;
-        private ExecutableFormulaBuilder(ExecutableFormulaBuilder parentFormulaBuilder)
+        private FormulaBuilder(FormulaBuilder parentFormulaBuilder)
         {
             _parentFormulaBuilder = parentFormulaBuilder;
             _nestedFormulaBuilders = new List<IFormulaBuilder>();
@@ -57,15 +57,15 @@ namespace FormulaBuilder.Core.Domain
 
         public static IFormulaIdBuilder Initialize()
         { 
-            return new ExecutableFormulaBuilder(null);
+            return new FormulaBuilder(null);
         }
 
-        private static ExecutableFormulaBuilder Initialize(ExecutableFormulaBuilder parentFormulaBuilder)
+        private static FormulaBuilder Initialize(FormulaBuilder parentFormulaBuilder)
         {
             if (parentFormulaBuilder == null)
                 throw new ArgumentNullException(nameof(parentFormulaBuilder));
 
-            var formulaBuilder = new ExecutableFormulaBuilder(parentFormulaBuilder);
+            var formulaBuilder = new FormulaBuilder(parentFormulaBuilder);
             return formulaBuilder;
         }
 
@@ -110,10 +110,10 @@ namespace FormulaBuilder.Core.Domain
             return _rootNodeBuilder;
         }
 
-        public ExecutableFormula<T> Build<T>()
+        public Formula Build()
         {
-            var nestedFormulas = _nestedFormulaBuilders.Select(formula => formula.Build<T>());
-            return new ExecutableFormula<T>(_id, _name, _rootNodeBuilder.Build(), nestedFormulas);
+            var nestedFormulas = _nestedFormulaBuilders.Select(formula => formula.Build());
+            return new Formula(_id, _name, _rootNodeBuilder.Build(), nestedFormulas);
         }
     }
 }

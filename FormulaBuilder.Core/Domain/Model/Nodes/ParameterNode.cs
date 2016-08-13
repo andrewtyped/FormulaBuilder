@@ -32,7 +32,7 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
             return new HashSet<string>() { this.Value };
         }
 
-        public override T Resolve<T>(ExecutableFormula<T> formulaContext)
+        public override T Resolve<T>(Executable<T> formulaContext)
         {
             var parameter = formulaContext.Parameters[Value];
             var value = parameter.GetValue();

@@ -40,7 +40,7 @@ namespace FormulaBuilder.Core.Domain
         INodeEndBuilder,
         INodeBuilder
     {
-        private readonly ExecutableFormulaBuilder _formulaBuilder;
+        private readonly FormulaBuilder _formulaBuilder;
         private readonly NodeBuilder _parentNodeBuilder;
         private readonly List<NodeBuilder> _childNodeBuilders;
 
@@ -50,7 +50,7 @@ namespace FormulaBuilder.Core.Domain
         private string _value;
         private NodeType _nodeType = EMPTY;
         private int _position;
-        private NodeBuilder(ExecutableFormulaBuilder formulaBuilder, NodeBuilder parentNodeBuilder, int position = 0)
+        private NodeBuilder(FormulaBuilder formulaBuilder, NodeBuilder parentNodeBuilder, int position = 0)
         {
             _formulaBuilder = formulaBuilder;
             _parentNodeBuilder = parentNodeBuilder;
@@ -59,19 +59,19 @@ namespace FormulaBuilder.Core.Domain
             _position = position;
         }
 
-        public static INodeTypeBuilder Initialize(ExecutableFormulaBuilder formulaBuilder)
+        public static INodeTypeBuilder Initialize(FormulaBuilder formulaBuilder)
         {
             if (formulaBuilder == null)
-                throw new ArgumentNullException(nameof(FormulaBuilder));
+                throw new ArgumentNullException(nameof(formulaBuilder));
 
             var nodeBuilder = new NodeBuilder(formulaBuilder, null);
             return nodeBuilder;
         }
 
-        private static INodeTypeBuilder Initialize(ExecutableFormulaBuilder formulaBuilder, NodeBuilder parentNodeBuilder, int position)
+        private static INodeTypeBuilder Initialize(FormulaBuilder formulaBuilder, NodeBuilder parentNodeBuilder, int position)
         {
             if (formulaBuilder == null)
-                throw new ArgumentNullException(nameof(FormulaBuilder));
+                throw new ArgumentNullException(nameof(formulaBuilder));
 
             if (parentNodeBuilder == null)
                 throw new ArgumentNullException(nameof(parentNodeBuilder));
