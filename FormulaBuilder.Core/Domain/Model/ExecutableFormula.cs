@@ -16,13 +16,17 @@ namespace FormulaBuilder.Core.Domain.Model
     public interface IExecutable<T>
     {
         T Execute();
-        IParameterSetter<T> ClearParameters();
+        IParameterSetter<T> Reset();
     }
 
     public class ExecutableFormula<T> : Formula, IParameterSetter<T>, IExecutable<T>
     {
         private readonly Dictionary<string, Parameter> _parameters = new Dictionary<string, Parameter>();
         public IReadOnlyDictionary<string, Parameter> Parameters { get { return _parameters; } }
+
+        private readonly Dictionary<string, T> _nestedFormulaResults = new Dictionary<string, T>();
+
+        public IReadOnlyDictionary<string, T> NestedFormulaResults { get { return _nestedFormulaResults; } }
 
         internal ExecutableFormula(
            int id,
@@ -53,9 +57,10 @@ namespace FormulaBuilder.Core.Domain.Model
             return this;
         }
 
-        public IParameterSetter<T> ClearParameters()
+        public IParameterSetter<T> Reset()
         {
             _parameters.Clear();
+            _nestedFormulaResults.Clear();
             return this;
         }
 
@@ -75,6 +80,14 @@ namespace FormulaBuilder.Core.Domain.Model
         private IEnumerable<string> GetMissingParameters()
         {
             return RequiredParameters.Except(Parameters.Keys);
+        }
+
+        internal void AddNestedFormulaResult(string key, T result)
+        {
+            if (_nestedFormulaResults.ContainsKey(key))
+                throw new InvalidOperationException($"The result for key [{key}] has already been cached");
+
+            _nestedFormulaResults.Add(key, result);
         }
     }
 }
