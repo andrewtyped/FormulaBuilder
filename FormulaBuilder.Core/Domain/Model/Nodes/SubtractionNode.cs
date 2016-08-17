@@ -22,22 +22,31 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
 
         }
 
-        protected override T Aggregate<T>(IEnumerable<T> operands)
+        protected override decimal AggregateDecimal(IEnumerable<decimal> operands)
         {
-            var difference = Operator<T>.Zero;
-            int i = 0;
+            var head = operands.FirstOrDefault();
+            var tail = operands.Skip(1);
+            var tailSum = tail.Sum();
 
-            foreach (var operand in operands)
-            {
-                if (i == 0)
-                    difference = Operator<T>.Add(difference, operand);
-                else
-                    difference = Operator<T>.Subtract(difference, operand);
+            return head - tailSum;
+        }
 
-                i++;
-            }
+        protected override double AggregateDouble(IEnumerable<double> operands)
+        {
+            var head = operands.FirstOrDefault();
+            var tail = operands.Skip(1);
+            var tailSum = tail.Sum();
 
-            return difference;
+            return head - tailSum;
+        }
+
+        protected override float AggregateFloat(IEnumerable<float> operands)
+        {
+            var head = operands.FirstOrDefault();
+            var tail = operands.Skip(1);
+            var tailSum = tail.Sum();
+
+            return head - tailSum;
         }
     }
 }

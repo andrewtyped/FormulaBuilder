@@ -22,22 +22,40 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
 
         }
 
-        protected override T Aggregate<T>(IEnumerable<T> operands)
+        protected override decimal AggregateDecimal(IEnumerable<decimal> operands)
         {
-            var product = Operator<T>.Zero;
-            int i = 0;
+            decimal result = 1.00m;
+
+            foreach(var operand in operands)
+            {
+                result *= operand;
+            }
+
+            return result;
+        }
+
+        protected override double AggregateDouble(IEnumerable<double> operands)
+        {
+            double result = 1.00d;
 
             foreach (var operand in operands)
             {
-                if (i == 0)
-                    product = Operator<T>.Add(product, operand);
-                else
-                    product = Operator<T>.Multiply(product, operand);
-
-                i++;
+                result *= operand;
             }
 
-            return product;
+            return result;
+        }
+
+        protected override float AggregateFloat(IEnumerable<float> operands)
+        {
+            float result = 1.00f;
+
+            foreach (var operand in operands)
+            {
+                result *= operand;
+            }
+
+            return result;
         }
     }
 }

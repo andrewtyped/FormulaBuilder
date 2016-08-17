@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MiscUtil;
 
 namespace FormulaBuilder.Core.Domain.Model.Nodes
 {
@@ -22,14 +21,19 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
 
         }
 
-        protected override T Aggregate<T>(IEnumerable<T> operands)
+        protected override decimal AggregateDecimal(IEnumerable<decimal> operands)
         {
-            var sum = Operator<T>.Zero;
+            return operands.Sum();
+        }
 
-            foreach (var operand in operands)
-                sum = Operator<T>.Add(sum, operand);
+        protected override double AggregateDouble(IEnumerable<double> operands)
+        {
+            return operands.Sum();
+        }
 
-            return sum;
+        protected override float AggregateFloat(IEnumerable<float> operands)
+        {
+            return operands.Sum();
         }
     }
 }

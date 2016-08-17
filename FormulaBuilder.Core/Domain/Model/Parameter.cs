@@ -14,6 +14,9 @@ namespace FormulaBuilder.Core.Domain.Model
         protected Parameter() { }
         internal Parameter(string name, object value)
         {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
             Name = name;
             _value = value;
         }

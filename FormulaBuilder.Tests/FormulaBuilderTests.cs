@@ -19,18 +19,6 @@ namespace FormulaBuilder.Tests
     [TestFixture]
     public class FormulaBuilderTests : BaseUnitTest
     {
-        [Test]
-        public void Can_Build_Parameter()
-        {
-            var parameter = ParameterBuilder.Initialize()
-                .WithName("foo")
-                .WithValue<decimal>(10.00m)
-                .Build();
-
-            Assert.AreEqual(typeof(Parameter<decimal>), parameter.GetType());
-            Assert.AreEqual("foo", parameter.Name);
-            Assert.AreEqual(10.00m, parameter.GetValue());
-        }
 
         [Test]
         public void Can_Build_Triple_Sum_Formula()
@@ -56,23 +44,13 @@ namespace FormulaBuilder.Tests
 
             var executable = Executable()
                 .Formula(formula)
-                .Returns<decimal>()
-                .WithParameter(ParameterBuilder.Initialize()
-                   .WithName("Param1")
-                   .WithValue(10.00m)
-                   .Build())
-               .WithParameter(ParameterBuilder.Initialize()
-                   .WithName("Param2")
-                   .WithValue(20.00f)
-                   .Build())
-               .WithParameter(ParameterBuilder.Initialize()
-                   .WithName("Param3")
-                   .WithValue(30.00m)
-                   .Build())
-               .AndNoMoreParameters()
-               .Build<decimal>();
+                .ReturnsDecimal()
+                .WithParameter("Param1", 10.00m)
+                .WithParameter("Param2", 20.00m)
+                .WithParameter("Param3", 30.00m)
+               .Build();
 
-            var result = executable.Execute();
+            decimal result = executable.Execute();
             Assert.AreEqual(60.00m, result);
         }
 
@@ -126,13 +104,12 @@ namespace FormulaBuilder.Tests
 
             var executable = Executable()
                 .Formula(formula)
-                .Returns<decimal>()
-                .WithParameter(new Parameter<decimal>("G", 6.67408m * .0000000001m))
-                .WithParameter(new Parameter<int>("m1", 150000))
-                .WithParameter(new Parameter<decimal>("m2", 650000.5m))
-                .WithParameter(new Parameter<decimal>("d", 450.345m))
-                .AndNoMoreParameters()
-                .Build<decimal>();
+                .ReturnsDecimal()
+                .WithParameter("G", 6.67408m * .0000000001m)
+                .WithParameter("m1", 150000)
+                .WithParameter("m2", 650000.5m)
+                .WithParameter("d", 450.345m)
+                .Build();
 
             var expectedResult = (6.67408m * .0000000001m * 150000 * 650000.5m) / (450.345m * 450.345m); 
             var result = executable.Execute();
@@ -208,12 +185,11 @@ namespace FormulaBuilder.Tests
 
             var executable = Executable()
                 .Formula(formula)
-                .Returns<decimal>()
-                .WithParameter(new Parameter<decimal>("Param1", 10.00m))
-                .WithParameter(new Parameter<decimal>("m", 20.00m))
-                .WithParameter(new Parameter<decimal>("a", 30.00m))
-                .AndNoMoreParameters()
-                .Build<decimal>();
+                .ReturnsDecimal()
+                .WithParameter("Param1", 10.00m)
+                .WithParameter("m", 20.00m)
+                .WithParameter("a", 30.00m)
+                .Build();
 
             var result = executable.Execute();
             Assert.That(result == 6000.00m);

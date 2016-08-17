@@ -35,18 +35,54 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
             return nestedFormula.RootNode.GatherParameters(formulaContext);
         }
 
-        public override T Resolve<T>(Executable<T> executionContext)
-        {
-            T result;
 
-            if (!executionContext.NestedFormulaResults.TryGetValue(Value, out result))
+        public override decimal Resolve(Executable<decimal> formulaContext)
+        {
+            decimal result;
+
+            if (HasNoCachedResult(formulaContext, out result))
             {
-                var nestedFormula = executionContext.Formula.NestedFormulas[Value];
-                result = nestedFormula.RootNode.Resolve(executionContext);
-                executionContext.AddNestedFormulaResult(Value, result);
+                result = GetNestedFormula(formulaContext).RootNode.Resolve(formulaContext);
+                formulaContext.AddNestedFormulaResult(Value, result);
             }
 
             return result;
+        }
+
+        public override double Resolve(Executable<double> formulaContext)
+        {
+            double result;
+
+            if (HasNoCachedResult(formulaContext, out result))
+            {
+                result = GetNestedFormula(formulaContext).RootNode.Resolve(formulaContext);
+                formulaContext.AddNestedFormulaResult(Value, result);
+            }
+
+            return result;
+        }
+
+        public override float Resolve(Executable<float> formulaContext)
+        {
+            float result;
+
+            if (HasNoCachedResult(formulaContext, out result))
+            {
+                result = GetNestedFormula(formulaContext).RootNode.Resolve(formulaContext);
+                formulaContext.AddNestedFormulaResult(Value, result);
+            }
+
+            return result;
+        }
+
+        private bool HasNoCachedResult<T>(Executable<T> formulaContext, out T result) where T:struct
+        {
+            return !formulaContext.NestedFormulaResults.TryGetValue(Value, out result);
+        }
+
+        private Formula GetNestedFormula<T>(Executable<T> formulaContext) where T:struct
+        {
+            return formulaContext.Formula.NestedFormulas[Value];
         }
     }
 }

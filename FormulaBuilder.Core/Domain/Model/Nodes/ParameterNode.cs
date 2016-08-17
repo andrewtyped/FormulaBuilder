@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FormulaBuilder.Core.Models;
-using MiscUtil;
 
 namespace FormulaBuilder.Core.Domain.Model.Nodes
 {
@@ -32,21 +31,32 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
             return new HashSet<string>() { this.Value };
         }
 
-        public override T Resolve<T>(Executable<T> formulaContext)
+        public override decimal Resolve(Executable<decimal> formulaContext)
+        {
+            return ResolveGeneric(formulaContext);
+        }
+
+        public override double Resolve(Executable<double> formulaContext)
+        {
+            return ResolveGeneric(formulaContext);
+        }
+
+        public override float Resolve(Executable<float> formulaContext)
+        {
+            return ResolveGeneric(formulaContext);
+        }
+
+        private T ResolveGeneric<T>(Executable<T> formulaContext) where T : struct
         {
             var parameter = formulaContext.Parameters[Value];
-            var value = parameter.GetValue();
-            var type = parameter.GetParameterType();
+            var result = (parameter as Parameter<T>)?.GetTypedValue();
 
-            if (type == typeof(T))
-                return (T)value;
-            else
-            {
-                var convertMethod = typeof(Operator).GetMethod(nameof(Operator.Convert));
-                var genericConvertMethod = convertMethod.MakeGenericMethod(type, typeof(T));
-                var result = (T)genericConvertMethod.Invoke(null, new object[] { value });
-                return result;
-            }
+            if(!result.HasValue)
+                throw new InvalidOperationException($"Parameter type {parameter.GetParameterType().Name} does not equal expected type {typeof(T).Name}");
+
+            return result.Value;
         }
+
+
     }
 }

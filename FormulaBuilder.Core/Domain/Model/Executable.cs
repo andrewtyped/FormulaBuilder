@@ -7,7 +7,13 @@ using System.Threading.Tasks;
 
 namespace FormulaBuilder.Core.Domain.Model
 {
-    public class Executable<T>
+    public abstract class Executable
+    {
+        internal Executable() { }
+        public abstract Number Execute();
+    }
+    public class Executable<T> : Executable
+        where T:struct
     {
         public Formula Formula { get; }
         public IReadOnlyDictionary<string, Parameter> Parameters { get; }
@@ -24,9 +30,22 @@ namespace FormulaBuilder.Core.Domain.Model
             Parameters = parameters;
         }
 
-        public T Execute()
+        public override Number Execute()
         {
-            return Formula.RootNode.Resolve<T>(this);
+            Number result;
+
+            var type = typeof(T);
+
+            if (type == typeof(decimal))
+                result = Formula.RootNode.Resolve(this as Executable<decimal>);
+            else if (type == typeof(float))
+                result = Formula.RootNode.Resolve(this as Executable<float>);
+            else if (type == typeof(double))
+                result = Formula.RootNode.Resolve(this as Executable<double>);
+            else
+                throw new InvalidOperationException($"Unsupported return type");
+
+            return result;
         }
 
         internal void AddNestedFormulaResult(string key, T result)

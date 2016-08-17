@@ -90,10 +90,10 @@
     <Compile Include="Domain\Model\Nodes\OperationNode.cs" />
     <Compile Include="Domain\Model\Nodes\SubtractionNode.cs" />
     <Compile Include="Domain\Model\Nodes\AdditionNode.cs" />
+    <Compile Include="Domain\Model\Number.cs" />
     <Compile Include="Domain\Model\Parameter.cs" />
     <Compile Include="Domain\Model\Nodes\ParameterNode.cs" />
     <Compile Include="Domain\NodeBuilder.cs" />
-    <Compile Include="Domain\ParameterBuilder.cs" />
     <Compile Include="Logging\ILoggingService.cs" />
     <Compile Include="Logging\LoggingService.cs" />
     <Compile Include="Models\FormulaEntity.cs" />
