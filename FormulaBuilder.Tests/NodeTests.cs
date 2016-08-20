@@ -29,13 +29,12 @@ namespace FormulaBuilder.Tests
                 "+",
                 0,
                 new List<NodeEntity>() { childEntity });
-            var childNode = Node.Create(childEntity);
-            var parentNode = Node.Create(parentEntity);
+            var childNode = BaseNode.Create(childEntity);
+            var parentNode = BaseNode.Create(parentEntity);
             var expectedNodeType = typeof(AdditionNode);
 
             Assert.AreEqual(expectedNodeType, parentNode.GetType());
             Assert.AreEqual(parentEntity.Value, parentNode.Value);
-            Assert.AreEqual(parentEntity.Position, parentNode.Position);
             Assert.AreEqual(parentEntity.Children.Count(), parentNode.Children.Count());
         }
 

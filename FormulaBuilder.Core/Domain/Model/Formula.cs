@@ -13,7 +13,7 @@ namespace FormulaBuilder.Core.Domain.Model
     {
         public int Id { get; }
         public string Name { get; }
-        public Node RootNode { get; }
+        public BaseNode RootNode { get; }
         public HashSet<string> RequiredParameters { get; }
         public Dictionary<string, Formula> NestedFormulas { get; }
 
@@ -24,15 +24,15 @@ namespace FormulaBuilder.Core.Domain.Model
 
             Id = formulaEntity.Id;
             Name = formulaEntity.Name;
-            RootNode = Node.Create(formulaEntity.RootNode);
+            RootNode = BaseNode.Create(formulaEntity.RootNode);
         }
 
-        protected internal Formula(int id, string name, Node rootNode)
+        protected internal Formula(int id, string name, BaseNode rootNode)
             :this(id, name, rootNode, new List<Formula>())
         {
         }
 
-        protected internal Formula(int id, string name, Node rootNode, IEnumerable<Formula> nestedFormulas)
+        protected internal Formula(int id, string name, BaseNode rootNode, IEnumerable<Formula> nestedFormulas)
         {
             Id = id;
             Name = name;

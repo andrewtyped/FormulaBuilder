@@ -10,12 +10,11 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
     {
         public int Id { get; set; }
         public string Value { get; set; }
-        public int Position { get; set; }
-        public IEnumerable<Node> Children { get; set; }
+        public IEnumerable<BaseNode> Children { get; set; }
 
         public NodeType NodeType { get; set; }
 
-        public NodeDTO(int id, string value, int position, IEnumerable<Node> children, NodeType nodeType)
+        public NodeDTO(int id, string value, IEnumerable<BaseNode> children, NodeType nodeType)
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException($"value must be non-null, non-empty, non-whitespace.", nameof(value));
@@ -24,8 +23,7 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
 
             Id = id;
             Value = value;
-            Position = position;
-            Children = children.OrderBy(n => n.Position);
+            Children = children;
             NodeType = nodeType;
         }
     }

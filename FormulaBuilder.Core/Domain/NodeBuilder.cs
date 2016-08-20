@@ -15,78 +15,43 @@ namespace FormulaBuilder.Core.Domain
         INodePartsBuilder Parameter(string parameterName);
     }
 
-    public interface INodePartsBuilder
+    public interface INodePartsBuilder : INodeBuilder
     {
         INodePartsBuilder WithId(int id);
-        INodeTypeBuilder WithChild();
-        INodeEndBuilder EndNode();
-    }
-
-    public interface INodeEndBuilder
-    {
-        INodeEndBuilder EndNode();
-        IFormulaPartsBuilder EndNodes();
-        INodeTypeBuilder WithChild();
+        INodeBuilder WithChildren(params INodeBuilder[] nodeBuilders);
     }
 
     public interface INodeBuilder
     {
-        Node Build();
+        BaseNode Build();
     }
 
     public class NodeBuilder :
         INodeTypeBuilder,
         INodePartsBuilder,
-        INodeEndBuilder,
         INodeBuilder
     {
-        private readonly FormulaBuilder _formulaBuilder;
-        private readonly NodeBuilder _parentNodeBuilder;
-        private readonly List<NodeBuilder> _childNodeBuilders;
-
-        private int _childCounter;
+        private readonly List<INodeBuilder> _childNodeBuilders;
 
         private int _id;
         private string _value;
         private NodeType _nodeType = EMPTY;
-        private int _position;
-        private NodeBuilder(FormulaBuilder formulaBuilder, NodeBuilder parentNodeBuilder, int position = 0)
+
+        private NodeBuilder()
         {
-            _formulaBuilder = formulaBuilder;
-            _parentNodeBuilder = parentNodeBuilder;
-            _childNodeBuilders = new List<NodeBuilder>();
+            _childNodeBuilders = new List<INodeBuilder>();
             _nodeType = EMPTY;
-            _position = position;
         }
 
-        public static INodeTypeBuilder Initialize(FormulaBuilder formulaBuilder)
+        public static INodeTypeBuilder Node
         {
-            if (formulaBuilder == null)
-                throw new ArgumentNullException(nameof(formulaBuilder));
-
-            var nodeBuilder = new NodeBuilder(formulaBuilder, null);
-            return nodeBuilder;
+            get
+            {
+                var nodeBuilder = new NodeBuilder();
+                return nodeBuilder;
+            }
         }
-
-        private static INodeTypeBuilder Initialize(FormulaBuilder formulaBuilder, NodeBuilder parentNodeBuilder, int position)
-        {
-            if (formulaBuilder == null)
-                throw new ArgumentNullException(nameof(formulaBuilder));
-
-            if (parentNodeBuilder == null)
-                throw new ArgumentNullException(nameof(parentNodeBuilder));
-
-            var nodeBuilder = new NodeBuilder(formulaBuilder, parentNodeBuilder, position);
-            return nodeBuilder;
-        }
-
-        public INodeTypeBuilder WithChild()
-        {
-            var childNodeBuilder = Initialize(_formulaBuilder, this, _childCounter++);
-            _childNodeBuilders.Add(childNodeBuilder as NodeBuilder);
-            return childNodeBuilder;
-        }
-
+        
         public INodePartsBuilder NestedFormula(string formulaName)
         {
             _nodeType = FORMULA;
@@ -122,21 +87,24 @@ namespace FormulaBuilder.Core.Domain
             return this;
         }
 
-        public INodeEndBuilder EndNode()
+        public INodeBuilder WithChildren(params INodeBuilder[] nodeBuilders)
         {
-            return _parentNodeBuilder ?? this;
+            if (nodeBuilders == null)
+                throw new ArgumentNullException(nameof(nodeBuilders));
+
+            foreach (var nodeBuilder in nodeBuilders)
+            {
+                _childNodeBuilders.Add(nodeBuilder);
+            }
+
+            return this;
         }
 
-        public IFormulaPartsBuilder EndNodes()
-        {
-            return _formulaBuilder;
-        }
-
-        public Node Build()
+        public BaseNode Build()
         {
             var children = _childNodeBuilders.Select(child => child.Build());
-            var nodeDTO = new NodeDTO(_id, _value, _position, children, _nodeType);
-            var node = Node.Create(nodeDTO);
+            var nodeDTO = new NodeDTO(_id, _value, children, _nodeType);
+            var node = Model.Nodes.BaseNode.Create(nodeDTO);
 
             return node;
         }

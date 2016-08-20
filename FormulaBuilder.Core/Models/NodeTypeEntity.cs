@@ -26,7 +26,7 @@ namespace FormulaBuilder.Core.Models
         internal static NodeTypeEntity Parameter = new NodeTypeEntity(2, "parameter");
         internal static NodeTypeEntity Formula = new NodeTypeEntity(3, "formula");
 
-        internal static NodeTypeEntity Create(Node node)
+        internal static NodeTypeEntity Create(BaseNode node)
         {
             if (node == null)
                 throw new ArgumentNullException(nameof(node));

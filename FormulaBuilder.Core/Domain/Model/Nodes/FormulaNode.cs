@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FormulaBuilder.Core.Domain.Model.Nodes
 {
-    class FormulaNode : Node
+    class FormulaNode : BaseNode
     {
         internal FormulaNode(NodeEntity nodeEntity)
             :base(nodeEntity)

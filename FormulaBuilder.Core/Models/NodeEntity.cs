@@ -58,7 +58,7 @@ namespace FormulaBuilder.Core.Models
         }
 
 
-        internal NodeEntity(Formula formula, Node node)
+        internal NodeEntity(Formula formula, BaseNode node, int position)
         {
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
@@ -66,8 +66,8 @@ namespace FormulaBuilder.Core.Models
             Id = node.Id;
             Type = NodeTypeEntity.Create(node);
             Value = node.Value;
-            Position = node.Position;
-            Children = node.Children.Select(n => new NodeEntity(formula, n)).ToList();
+            Position = position;
+            Children = node.Children.Select((n, idx) => new NodeEntity(formula, n, idx)).ToList();
 
             Formula referencedFormula;
 

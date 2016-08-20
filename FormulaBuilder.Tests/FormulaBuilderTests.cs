@@ -12,7 +12,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static FormulaBuilder.Core.Domain.FormulaBuilder;
 using static FormulaBuilder.Core.Domain.ExecutableFormulaBuilder;
+using static FormulaBuilder.Core.Domain.NodeBuilder;
 
 namespace FormulaBuilder.Tests
 {
@@ -56,28 +58,23 @@ namespace FormulaBuilder.Tests
 
         private Formula BuildTripleSumFormula(FormulaEntity entity)
         {
-            var formula = Core.Domain.FormulaBuilder.Initialize()
+            var formula = Formula()
                .WithId(entity.Id)
                .WithName(entity.Name)
-               .WithRootNode()
+               .WithRootNode(
+                    Node
                     .Operation("+")
                     .WithId(entity.RootNode.Id)
-                    .WithChild()
-                        .Operation("+")
-                        .WithChild()
-                            .Parameter("Param1")
-                        .EndNode()
-                        .WithChild()
-                            .Parameter("Param2")
-                        .EndNode()
-                    .EndNode()
-                    .WithChild()
-                        .Parameter("Param3")
-                    .EndNode()
-                .EndNode()
-               .EndNodes()
+                    .WithChildren(
+                        Node.Operation("+")
+                        .WithChildren(
+                            Node.Parameter("Param1"),
+                            Node.Parameter("Param2")
+                        ),
+                        Node.Parameter("Param3")
+                    )
+               )
                .Build();
-
 
             return formula;
         }
@@ -118,33 +115,26 @@ namespace FormulaBuilder.Tests
 
         private Formula BuildGeneralGravityFormula(FormulaEntity entity)
         {
-            var formula = Core.Domain.FormulaBuilder.Initialize()
+            var formula = Formula()
                 .WithId(0)
                 .WithName("General Gravitational Force")
-                .WithRootNode()
+                .WithRootNode(
+                    Node
                     .Operation("/")
-                    .WithChild()
-                        .Operation("*")
-                        .WithChild()
-                            .Parameter("G")
-                        .EndNode()
-                        .WithChild()
-                            .Parameter("m1")
-                        .EndNode()
-                        .WithChild()
-                            .Parameter("m2")
-                        .EndNode()
-                    .EndNode()
-                    .WithChild()
-                        .Operation("*")
-                        .WithChild()
-                            .Parameter("d")
-                        .EndNode()
-                        .WithChild()
-                            .Parameter("d")
-                        .EndNode()
-                    .EndNode()
-                .EndNodes()
+                    .WithChildren(
+                        Node.Operation("*")
+                            .WithChildren(
+                                Node.Parameter("G"),
+                                Node.Parameter("m1"),
+                                Node.Parameter("m2")
+                            ),
+                        Node.Operation("*")
+                            .WithChildren(
+                                Node.Parameter("d"),
+                                Node.Parameter("d")
+                            )
+                   )
+                )
                 .Build();
 
             return formula;
@@ -153,34 +143,30 @@ namespace FormulaBuilder.Tests
         [Test]
         public void Build_Crazy_Nested_Formula()
         {
-            var formula = Core.Domain.FormulaBuilder.Initialize()
+            var formula = Formula()
                 .WithId(0)
                 .WithName("Crazy")
-                .WithRootNode()
+                .WithRootNode(
+                    Node
                     .Operation("*")
-                    .WithChild()
-                        .NestedFormula("F")
-                    .EndNode()
-                    .WithChild()
-                        .Parameter("Param1")
-                    .EndNode()
-                .EndNode()
-                .EndNodes()
-                .WithNestedFormula()
+                    .WithChildren(
+                         Node.NestedFormula("F"),
+                         Node.Parameter("Param1")
+                    )
+                )
+                .WithNestedFormulas(
+                    Formula()
                     .WithId(0)
                     .WithName("F")
-                    .WithRootNode()
+                    .WithRootNode(
+                        Node
                         .Operation("*")
-                        .WithChild()
-                            .Parameter("m")
-                        .EndNode()
-                        .WithChild()
-                            .Parameter("a")
-                        .EndNode()
-                    .EndNode()
-                    .EndNodes()
-                .EndNestedFormula()
-                .EndNestedFormulas()
+                        .WithChildren(
+                            Node.Parameter("m"),
+                            Node.Parameter("a")
+                        )
+                    )
+                )
                 .Build();
 
             var executable = Executable()

@@ -7,37 +7,35 @@ using System.Threading.Tasks;
 
 namespace FormulaBuilder.Core.Domain.Model.Nodes
 {
-    public abstract class Node
+    public abstract class BaseNode
     {
         public int Id { get; }
         public string Value { get; }
-        public int Position { get; }
-        public IEnumerable<Node> Children { get; }
+        public IEnumerable<BaseNode> Children { get; }
 
-        internal Node(NodeEntity nodeEntity)
+        internal BaseNode(NodeEntity nodeEntity)
         {
             if (nodeEntity == null)
                 throw new ArgumentNullException(nameof(nodeEntity));
 
             Id = nodeEntity.Id;
             Value = nodeEntity.Value;
-            Position = nodeEntity.Position;
-            Children = nodeEntity.Children.Select(ne => Node.Create(ne))
-                .OrderBy(n => n.Position);
+            Children = nodeEntity.Children
+                .OrderBy(ne => ne.Position)
+                .Select(ne => BaseNode.Create(ne));
         }
 
-        protected Node(NodeDTO nodeDTO)
+        protected BaseNode(NodeDTO nodeDTO)
         {
             if (nodeDTO == null)
                 throw new ArgumentNullException(nameof(nodeDTO));
 
             Id = nodeDTO.Id;
             Value = nodeDTO.Value;
-            Position = nodeDTO.Position;
             Children = nodeDTO.Children;
         }
 
-        protected internal static Node Create(NodeEntity nodeEntity)
+        protected internal static BaseNode Create(NodeEntity nodeEntity)
         {
             var nodeType = nodeEntity.Type.Name;
 
@@ -54,7 +52,7 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
             }
         }
 
-        public static Node Create(NodeDTO nodeDTO)
+        public static BaseNode Create(NodeDTO nodeDTO)
         {
             if (nodeDTO == null)
                 throw new ArgumentNullException(nameof(nodeDTO));
@@ -72,9 +70,9 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
             }
         }
 
-        public static Node Create(int id, NodeType nodeType, string value, int position, IEnumerable<Node> children)
+        public static BaseNode Create(int id, NodeType nodeType, string value, IEnumerable<BaseNode> children)
         {
-            var nodeDTO = new NodeDTO(id, value, position, children, nodeType);
+            var nodeDTO = new NodeDTO(id, value, children, nodeType);
             return Create(nodeDTO);
         }
 

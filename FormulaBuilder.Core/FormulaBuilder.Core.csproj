@@ -84,7 +84,7 @@
     <Compile Include="Domain\Model\Nodes\DivisionNode.cs" />
     <Compile Include="Domain\Model\Nodes\FormulaNode.cs" />
     <Compile Include="Domain\Model\Nodes\MultiplicationNode.cs" />
-    <Compile Include="Domain\Model\Nodes\Node.cs" />
+    <Compile Include="Domain\Model\Nodes\BaseNode.cs" />
     <Compile Include="Domain\Model\Nodes\NodeDTO.cs" />
     <Compile Include="Domain\Model\Nodes\NodeType.cs" />
     <Compile Include="Domain\Model\Nodes\OperationNode.cs" />

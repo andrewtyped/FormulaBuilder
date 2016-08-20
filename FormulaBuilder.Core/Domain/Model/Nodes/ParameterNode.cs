@@ -7,7 +7,7 @@ using FormulaBuilder.Core.Models;
 
 namespace FormulaBuilder.Core.Domain.Model.Nodes
 {
-    class ParameterNode : Node
+    class ParameterNode : BaseNode
     {
         protected internal ParameterNode(NodeEntity nodeEntity) : base(nodeEntity)
         {

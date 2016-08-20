@@ -38,18 +38,18 @@ namespace FormulaBuilder.Tests.SqlLite
             return formula;
         }
 
-        private static Node CreateTripleSumNodes()
+        private static BaseNode CreateTripleSumNodes()
         {
-            var noChildren = new List<Node>();
-            var param1Node = Node.Create(0, PARAMETER, PARAM1, 0, noChildren);
-            var param2Node = Node.Create(0,PARAMETER, PARAM2,1, noChildren);
-            var param3Node = Node.Create(0, PARAMETER, PARAM3, 0, noChildren);
-            var bottomPlusNode = Node.Create(0, OPERATOR, PLUS,1, new List<Node>()
+            var noChildren = new List<BaseNode>();
+            var param1Node = BaseNode.Create(0, PARAMETER, PARAM1, noChildren);
+            var param2Node = BaseNode.Create(0,PARAMETER, PARAM2, noChildren);
+            var param3Node = BaseNode.Create(0, PARAMETER, PARAM3, noChildren);
+            var bottomPlusNode = BaseNode.Create(0, OPERATOR, PLUS, new List<BaseNode>()
             {
                 param1Node,
                 param2Node
             });
-            var topPlusNode = Node.Create(0,OPERATOR,PLUS,0,new List<Node>()
+            var topPlusNode = BaseNode.Create(0,OPERATOR,PLUS,new List<BaseNode>()
             {
                 bottomPlusNode,
                 param3Node
@@ -65,27 +65,27 @@ namespace FormulaBuilder.Tests.SqlLite
             return formula;
         }
 
-        public static Node CreateGeneralGravityNodes()
+        public static BaseNode CreateGeneralGravityNodes()
         {
-            var noChildren = new List<Node>();
-            var GravityConstant = Node.Create(0,PARAMETER, "G", 0, noChildren);
-            var mass1 = Node.Create(0,PARAMETER, "m1", 1, noChildren);
-            var mass2 = Node.Create(0,PARAMETER, "m2", 2, noChildren);
-            var distance = Node.Create(0,PARAMETER, "d", 0, noChildren);
+            var noChildren = new List<BaseNode>();
+            var GravityConstant = BaseNode.Create(0,PARAMETER, "G", noChildren);
+            var mass1 = BaseNode.Create(0,PARAMETER, "m1", noChildren);
+            var mass2 = BaseNode.Create(0,PARAMETER, "m2", noChildren);
+            var distance = BaseNode.Create(0,PARAMETER, "d", noChildren);
 
-            var dividend = Node.Create(0,OPERATOR, "*", 0, new List<Node>()
+            var dividend = BaseNode.Create(0,OPERATOR, "*", new List<BaseNode>()
             {
                 GravityConstant,
                 mass1,
                 mass2
             });
-            var divisor = Node.Create(0,OPERATOR, "*", 1, new List<Node>()
+            var divisor = BaseNode.Create(0,OPERATOR, "*", new List<BaseNode>()
             {
                 distance,
                 distance
             });
 
-            var quotient = Node.Create(0,OPERATOR, "/", 0, new List<Node>()
+            var quotient = BaseNode.Create(0,OPERATOR, "/", new List<BaseNode>()
             {
                 dividend,
                 divisor
@@ -94,7 +94,7 @@ namespace FormulaBuilder.Tests.SqlLite
             return quotient;
         }
 
-        private static void SaveNode(Node node, ISession session)
+        private static void SaveNode(BaseNode node, ISession session)
         {
             foreach(var child in node.Children)
             {

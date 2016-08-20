@@ -8,7 +8,7 @@ using FormulaBuilder.Core.Models;
 
 namespace FormulaBuilder.Core.Domain.Model.Nodes
 {
-    public abstract class OperationNode : Node
+    public abstract class OperationNode : BaseNode
     {
         private static Dictionary<string, Func<NodeDTO, OperationNode>> _operationRegistry =
             new Dictionary<string, Func<NodeDTO, OperationNode>>()
@@ -33,8 +33,7 @@ namespace FormulaBuilder.Core.Domain.Model.Nodes
             var nodeDTO = new NodeDTO(
                 nodeEntity.Id,
                 nodeEntity.Value,
-                nodeEntity.Position,
-                nodeEntity.Children.Select(ne => Node.Create(ne)),
+                nodeEntity.Children.Select(ne => BaseNode.Create(ne)),
                 NodeType.OPERATOR);
 
             return _operationRegistry[nodeEntity.Value](nodeDTO);
